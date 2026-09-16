@@ -87,10 +87,6 @@ h1{
   position:absolute;left:15px;top:50%;transform:translateY(-50%);
   width:20px;height:20px;pointer-events:none;
 }
-.searchbar .hint{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  font-size:12px;color:var(--coolgrey);pointer-events:none;
-}
 .searchbar button.clear{
   position:absolute;right:10px;top:50%;transform:translateY(-50%);
   font-family:var(--sans);font-size:13px;font-weight:600;
@@ -300,27 +296,26 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
         <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>
       </svg>
       <label for="q" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Search the handbook</label>
-      <input id="q" type="search" autocomplete="off" placeholder="Search: reimbursement, guest speaker, grades, Zoom&hellip;">
-      <span class="hint" id="slashHint">Press /</span>
+      <input id="q" type="search" autocomplete="off" placeholder="Try &quot;reimbursement&quot;, &quot;guest speaker&quot;, &quot;locked out&quot;">
       <button type="button" class="clear" id="clearBtn" hidden>Clear</button>
     </div>
     <p class="count" id="count" role="status" aria-live="polite"></p>
 
     <nav class="quick" aria-label="Common questions">
-      <h2>Jump to a common question</h2>
+      <h2>Common questions</h2>
       <ul id="quickList"></ul>
     </nav>
   </header>
 
   <div class="views" role="tablist" aria-label="How to browse">
-    <button type="button" role="tab" id="tab-when" aria-selected="true" aria-controls="content">By when it happens</button>
-    <button type="button" role="tab" id="tab-topic" aria-selected="false" aria-controls="content">By topic</button>
+    <button type="button" role="tab" id="tab-when" aria-selected="true" aria-controls="content">Course timeline</button>
+    <button type="button" role="tab" id="tab-topic" aria-selected="false" aria-controls="content">Browse by topic</button>
   </div>
 
   <main id="content" role="tabpanel" aria-labelledby="tab-when"></main>
 
   <section class="numbers" aria-labelledby="numbers-h">
-    <h2 id="numbers-h">Numbers worth memorizing</h2>
+    <h2 id="numbers-h">Deadlines and limits</h2>
     <dl id="numbersList"></dl>
   </section>
 
@@ -328,7 +323,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
     <h2 id="contacts-h">Who to email</h2>
     <div class="cgrid" id="contactGrid"></div>
     <div class="urgent">
-      <h3>On campus, right now</h3>
+      <h3>On-campus support</h3>
       <ul>
         <li><strong>Locked out of your classroom</strong> or another facility emergency: Land, Building and Real Estate, 650-723-2281.</li>
         <li><strong>Non-emergency security concern:</strong> Stanford Dispatcher, 650-329-2413, 24 hours a day.</li>
@@ -350,17 +345,17 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 const PHASES = [
   {k:"p1", label:"Course confirmed",  color:"var(--plum)",     h:"As soon as your course is confirmed",
    sub:"The requests with long lead times. Everything here gets harder or impossible if you wait."},
-  {k:"p2", label:"~2 months out",     color:"var(--cardinal)", h:"About two months out",
+  {k:"p2", label:"Two months out",     color:"var(--cardinal)", h:"About two months out",
    sub:"Forms that must be in before registration opens, because students shop for courses using what you submit."},
   {k:"p3", label:"Week before",       color:"var(--paloalto)", h:"The week before your first class",
    sub:"Setup and preparation. Short tasks, but several of them."},
   {k:"p4", label:"First class",       color:"var(--skydark)",  h:"Your first class session",
    sub:"How to start the meeting correctly and what to do in the first few minutes."},
-  {k:"p5", label:"During",            color:"var(--lagunita)", h:"During the quarter",
+  {k:"p5", label:"Mid-quarter",            color:"var(--lagunita)", h:"During the quarter",
    sub:"The situations that come up mid-course, and the policies behind them."},
-  {k:"p6", label:"Wrap-up",           color:"var(--brick)",    h:"Your last class and after",
+  {k:"p6", label:"End of course",           color:"var(--brick)",    h:"Your last class and after",
    sub:"Evaluations, grades, and the benefit you earn by teaching."},
-  {k:"p7", label:"Employment",        color:"var(--archway)",  h:"Employment and pay, any time",
+  {k:"p7", label:"Employment",        color:"var(--archway)",  h:"Employment and pay",
    sub:"How you get paid, what you must complete, and where you may work."}
 ];
 
@@ -368,11 +363,11 @@ const TOPICS = [
   {k:"t-setup",    h:"Getting set up",              sub:"Accounts, forms, and approvals before you teach."},
   {k:"t-tech",     h:"Technology",                  sub:"Canvas, Zoom, Panopto, Slack, and what to do when they break."},
   {k:"t-campus",   h:"Classroom and campus",        sub:"Rooms, A/V, wifi, and campus access."},
-  {k:"t-materials",h:"Course materials and money",  sub:"Textbooks, copies, reimbursements, copyright."},
+  {k:"t-materials",h:"Course materials and expenses",  sub:"Textbooks, copies, reimbursements, copyright."},
   {k:"t-students", h:"Students and conduct",        sub:"Enrollment, communication, behavior, accommodations."},
   {k:"t-grading",  h:"Grading and credit",          sub:"Grade options, assignments, deadlines, transcripts."},
   {k:"t-pay",      h:"Employment and pay",          sub:"Hiring, payroll, taxes, work location, training."},
-  {k:"t-policy",   h:"Policies, titles and privacy",sub:"What you may and may not say, share, or claim."}
+  {k:"t-policy",   h:"Policies and privacy",sub:"What you may and may not say, share, or claim."}
 ];
 
 const ENTRIES = [
@@ -968,7 +963,6 @@ const content   = document.getElementById("content");
 const qInput    = document.getElementById("q");
 const countEl   = document.getElementById("count");
 const clearBtn  = document.getElementById("clearBtn");
-const slashHint = document.getElementById("slashHint");
 const tabWhen   = document.getElementById("tab-when");
 const tabTopic  = document.getElementById("tab-topic");
 
@@ -1038,8 +1032,8 @@ const ALIASES = {
 
 /* Sections that live outside the entry list but that people search for. */
 const STATIC_BLOCKS = [
-  {key:"urgent", sel:".urgent", label:"On campus, right now",
-   hint:"Lockouts, security, emergencies, and mid-class tech help",
+  {key:"urgent", sel:".urgent", label:"On-campus support",
+   hint:"Numbers to keep handy if you teach on campus",
    alias:"locked out lockout locked lost key keys keycard badge door doors room rooms cant can't cannot get in shut out classroom building emergency 911 police security dispatcher facilities lbre fire ambulance injured urgent help now right now after hours"},
   {key:"contacts", sel:".contacts", label:"Who to email",
    hint:"Which inbox handles what, and the phone number",
@@ -1052,8 +1046,8 @@ const STATIC_BLOCKS = [
 const BADGE = {
   deadline:{cls:"b-deadline", label:"Deadline"},
   required:{cls:"b-required", label:"Required"},
-  early:   {cls:"b-early",    label:"Do early"},
-  money:   {cls:"b-money",    label:"Money"}
+  early:   {cls:"b-early",    label:"Plan ahead"},
+  money:   {cls:"b-money",    label:"Expense"}
 };
 
 /* plain-text haystack for search, built once */
@@ -1234,7 +1228,7 @@ function itemHtml(e, forceOpen){
       <div class="body">
         ${e.body}
         <p class="meta">
-          <span>Handbook p. ${e.pg}</span>
+          <span>Handbook ${e.pg.indexOf("-") > -1 ? "pages" : "page"} ${e.pg}</span>
           <span>${TOPIC_BY_KEY[e.tp].h}</span>
           <span>${PHASE_BY_KEY[e.ph].h}</span>
         </p>
@@ -1256,7 +1250,7 @@ function staticResultHtml(b, label){
   <div class="item best">
     <details open>
       <summary class="ressum">
-        <span class="crumb">On this page</span>
+        <span class="crumb">Contacts and numbers</span>
         <span class="line1">
           <span class="bestflag">${label}</span>
           <span class="ttl">${b.label}</span>
@@ -1273,7 +1267,7 @@ function resultHtml(e, res, isBest, bestLabel){
     `<span class="badge ${BADGE[k].cls}">${BADGE[k].label}</span>`
   ).join("");
   const crumb = `${TOPIC_BY_KEY[e.tp].h} &middot; ${PHASE_BY_KEY[e.ph].h}`;
-  const tail = `<p class="meta"><span>Handbook p. ${e.pg}</span><span>${crumb}</span></p>`;
+  const tail = `<p class="meta"><span>Handbook ${e.pg.indexOf("-") > -1 ? "pages" : "page"} ${e.pg}</span><span>${crumb}</span></p>`;
   const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>`;
 
   if(isBest){
@@ -1369,7 +1363,6 @@ function render(){
   const viewTabs = document.querySelector(".views");
   if(quickNav) quickNav.style.display = searching ? "none" : "";
   if(viewTabs) viewTabs.style.display = searching ? "none" : "";
-  slashHint.hidden = searching || document.activeElement === qInput;
 
   const typed = qInput.value.trim();
   const total = matches.length + statics.length;
@@ -1400,7 +1393,7 @@ function render(){
                         (matches.length === 0 || statics[0].score > topEntry);
 
     const staticsHtml = statics
-      .map((b, i) => staticResultHtml(b, sectionsWin && i === 0 ? bestLabel : "Also here"))
+      .map((b, i) => staticResultHtml(b, sectionsWin && i === 0 ? bestLabel : "Related"))
       .join("");
 
     const entriesHtml = matches.length
@@ -1447,8 +1440,6 @@ qInput.addEventListener("input", ()=>{
   clearTimeout(t);
   t = setTimeout(render, 110);
 });
-qInput.addEventListener("focus", ()=>{ slashHint.hidden = true; });
-qInput.addEventListener("blur",  ()=>{ slashHint.hidden = qInput.value.trim().length > 0; });
 qInput.addEventListener("keydown", e=>{
   if(e.key === "Escape"){ qInput.value = ""; render(); }
 });
