@@ -1058,7 +1058,7 @@ const ALIASES = {
   guest:"guest speaker visitor honorarium pay a speaker bring someone in",
   reimburse:"receipt expense money back refund buy purchase reimburse supplies supplies laser pointer adapter dongle chalk markers food snacks coffee drinks water",
   copies:"print printing photocopy copies handouts fedex kinkos paper photocopies copying duplicating paper handout printer printers print printouts",
-  copyright:"copyright fair use permission scan article pdf posting readings",
+  copyright:"copyright fair use permission scan article pdf posting readings copywrite copywright permissions scanning",
   library:"library books borrow research id card id card stanford id badge borrowing privileges",
   digitaltools:"app tool software discord facebook linkedin third party signup poll everywhere polling clickers survey tool website",
   ferpa:"privacy ferpa confidential roster grades bcc student data",
@@ -1151,6 +1151,54 @@ function termRegex(t){
     .join("|");
   return new RegExp("\\b(?:" + alt + ")", "i");
 }
+/* Vocabulary of every word on the page, for correcting typos. */
+let VOCAB = null;
+function buildVocab(){
+  const set = new Set();
+  const add = str => String(str).toLowerCase().split(/[^a-z0-9']+/)
+    .forEach(w => { if(w.length >= 4) set.add(w); });
+  ENTRIES.forEach(e => { add(e._title); add(e._alias); add(e._body); });
+  STATIC_BLOCKS.forEach(b => add(b.label + " " + b.hint + " " + b.alias));
+  VOCAB = [...set];
+}
+
+/* Levenshtein distance, abandoned as soon as it exceeds max. */
+function editDist(a, b, max){
+  if(Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = [];
+  for(let j = 0; j <= b.length; j++) prev[j] = j;
+  for(let i = 1; i <= a.length; i++){
+    const cur = [i];
+    let best = i;
+    for(let j = 1; j <= b.length; j++){
+      const cost = a.charAt(i-1) === b.charAt(j-1) ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + cost);
+      if(cur[j] < best) best = cur[j];
+    }
+    if(best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
+/* Nearest real word, when what was typed matches nothing. */
+function correctTerm(t){
+  if(t.length < 4) return t;
+  if(!VOCAB) buildVocab();
+  const re = termRegex(t);
+  for(let i = 0; i < VOCAB.length; i++){
+    if(re.test(VOCAB[i])) return t;
+  }
+  const max = t.length <= 5 ? 1 : 2;
+  let best = null, bestD = max + 1;
+  for(let i = 0; i < VOCAB.length; i++){
+    const w = VOCAB[i];
+    const d = editDist(t, w, max);
+    if(d < bestD || (d === bestD && best && w.length < best.length)){ bestD = d; best = w; }
+  }
+  return (best && bestD <= max) ? best : t;
+}
+
 function scoreEntry(e, res){
   let score = 0, hits = 0;
   res.forEach(re=>{
@@ -1334,7 +1382,9 @@ function render(){
   const searching = q.length > 0;
   const raw = q.split(/\s+/).filter(Boolean);
   const kept = raw.filter(t => !STOP.has(t));
-  const terms = kept.length ? kept : raw;
+  const typedTerms = kept.length ? kept : raw;
+  const terms = searching ? typedTerms.map(correctTerm) : typedTerms;
+  const fixed = terms.some((t, i) => t !== typedTerms[i]);
   let matches = ENTRIES;
   let statics = [];
   let loose = false;
@@ -1384,6 +1434,8 @@ function render(){
       countEl.textContent = `Nothing found for "${typed}". Try a single word, such as reimbursement, roster, Panopto, or honorarium.`;
     }else if(loose){
       countEl.textContent = `No exact match for "${typed}". Showing the closest results.`;
+    }else if(fixed){
+      countEl.textContent = `${total} ${total===1?"result":"results"} for "${terms.join(" ")}", corrected from "${typed}".`;
     }else{
       countEl.textContent = `${total} ${total===1?"result":"results"} for "${typed}".`;
     }
