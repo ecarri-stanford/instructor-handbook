@@ -32,6 +32,10 @@
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:"Source Sans 3",Calibri,"Segoe UI",Helvetica,Arial,sans-serif;
 }
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
@@ -96,6 +100,7 @@ h1{
   background:var(--white);color:var(--black);
 }
 .searchbar input::placeholder{color:var(--coolgrey);opacity:1;}
+.searchbar input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;}
 .searchbar .mag{
   position:absolute;left:15px;top:50%;transform:translateY(-50%);
   width:20px;height:20px;pointer-events:none;
@@ -295,6 +300,9 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 .body.statics .cgrid{margin-top:4px;}
 .body.statics dl{margin-top:4px;}
 .body.statics h3:first-child{margin-top:0;}
+/* .body sets cardinal markers, invisible on the cardinal contact card */
+.body.statics .card.primary li::marker{color:var(--white);}
+.body.statics .card li::marker{color:var(--cardinal);}
 
 /* ---------- reference band ---------- */
 .refband{
@@ -360,6 +368,15 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 .empty{
   padding:34px 0;font-size:16px;color:var(--coolgrey);
   border-top:1px solid var(--line);
+}
+
+@media (max-width:520px){
+  .group.phase{padding-left:36px;}
+  .group.phase::before{left:10px;}
+  .group.phase .step{width:22px;height:22px;font-size:12px;top:6px;}
+  .tilegrid{grid-template-columns:repeat(auto-fit,minmax(144px,1fr));}
+  .tilegrid button{min-height:78px;padding:12px 11px 13px;font-size:14px;}
+  .searchbar input{padding-right:88px;font-size:16px;}
 }
 
 @media (prefers-reduced-motion:reduce){
