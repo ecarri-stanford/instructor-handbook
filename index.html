@@ -62,7 +62,8 @@ a:hover{color:var(--cardinal-dark);}
 
 /* ---------- shell ---------- */
 .wrap{max-width:980px;margin:0 auto;padding:0 clamp(16px,4vw,32px);}
-header.hero{padding:clamp(28px,5vw,52px) 0 clamp(20px,3vw,28px);}
+header.hero{padding:clamp(34px,6vw,64px) 0 clamp(14px,2vw,20px);text-align:center;}
+header.hero .lede{margin-left:auto;margin-right:auto;}
 .eyebrow{
   font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   color:var(--coolgrey);margin:0 0 12px;
@@ -72,10 +73,22 @@ h1{
   font-size:clamp(32px,5.2vw,50px);line-height:1.1;
   margin:0 0 14px;color:var(--black);
 }
-.lede{font-size:clamp(16px,1.6vw,18px);color:var(--coolgrey);max-width:60ch;margin:0 0 6px;}
+.lede{font-size:clamp(16px,1.7vw,18.5px);color:var(--coolgrey);max-width:48ch;margin:0;}
 
 /* ---------- search ---------- */
-.searchbar{position:relative;margin:clamp(20px,3vw,28px) 0 8px;}
+.searchwrap{
+  position:sticky;top:0;z-index:20;
+  background:var(--white);
+  padding:clamp(14px,2vw,20px) 0 6px;
+  transition:padding .15s ease;
+}
+.searchwrap.pinned{
+  padding:10px 0 8px;
+  border-bottom:1px solid var(--line);
+  box-shadow:0 6px 14px -12px rgba(46,45,41,.5);
+}
+.searchbar{position:relative;margin:0;}
+.searchwrap.pinned .searchbar input{padding-top:12px;padding-bottom:12px;font-size:16px;}
 .searchbar input{
   width:100%;font-family:var(--sans);font-size:17px;
   padding:16px 108px 16px 46px;
@@ -95,6 +108,28 @@ h1{
 }
 .searchbar button.clear:hover{background:var(--cardinal-dark);}
 .count{font-size:14px;color:var(--coolgrey);min-height:22px;margin:0 0 4px;}
+
+/* ---------- situation tiles ---------- */
+.tiles{margin:clamp(18px,2.5vw,26px) 0 clamp(26px,3.5vw,34px);}
+.tiles h2{
+  font-family:var(--sans);font-size:12px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--coolgrey);
+  margin:0 0 12px;text-align:center;
+}
+.tilegrid{
+  display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+}
+.tilegrid button{
+  font-family:var(--sans);font-size:14.5px;font-weight:600;line-height:1.35;
+  text-align:left;background:var(--white);color:var(--black);
+  border:1px solid var(--line);padding:15px 14px 16px;cursor:pointer;
+  display:flex;flex-direction:column;gap:10px;min-height:88px;
+  transition:border-color .12s ease, background .12s ease;
+}
+.tilegrid button svg{width:24px;height:24px;color:var(--cardinal);flex:none;}
+.tilegrid button:hover{border-color:var(--cardinal);background:var(--line-soft);}
+.tilegrid button:focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
 
 /* ---------- quick asks ---------- */
 .quick{margin:4px 0 26px;}
@@ -116,6 +151,7 @@ h1{
   display:flex;gap:0;margin:0 0 4px;
   border-bottom:2px solid var(--line);
 }
+.views.hidden{display:none;}
 .views button{
   font-family:var(--sans);font-size:15px;font-weight:600;
   background:none;border:none;border-bottom:4px solid transparent;
@@ -130,11 +166,54 @@ h1{
   font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.6vw,28px);
   line-height:1.2;margin:0 0 4px;color:var(--black);
 }
-.group > .gsub{font-size:14.5px;color:var(--coolgrey);margin:0 0 14px;max-width:62ch;}
-.gtag{
-  display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.09em;
-  text-transform:uppercase;color:var(--white);padding:4px 9px;margin:0 0 10px;
+/* phases read as steps on a path */
+.group.phase{
+  position:relative;padding-left:52px;margin:0;
+  padding-bottom:26px;
 }
+.group.phase::before{
+  content:"";position:absolute;left:15px;top:38px;bottom:0;
+  width:2px;background:var(--line);
+}
+.group.phase:last-child::before{display:none;}
+.group.phase .step{
+  position:absolute;left:0;top:8px;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--cardinal);color:var(--white);
+  font-family:var(--sans);font-size:14px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.group.phase > h2{margin:6px 0 2px;}
+.group.phase .when{
+  font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--coolgrey);margin:0 0 10px;
+}
+
+/* ---------- topic cards ---------- */
+.topicgrid{
+  display:grid;gap:12px;margin:26px 0 0;
+  grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
+}
+.topicgrid button{
+  font-family:var(--sans);text-align:left;cursor:pointer;
+  background:var(--line-soft);border:none;padding:18px;
+  display:block;transition:background .12s ease;
+}
+.topicgrid button:hover{background:var(--cardinal);color:var(--white);}
+.topicgrid button:hover .tcount{color:var(--white);}
+.topicgrid .tname{
+  font-family:var(--serif);font-weight:400;font-size:19px;line-height:1.25;
+  display:block;margin:0 0 6px;
+}
+.topicgrid .tcount{font-size:13px;font-weight:600;color:var(--coolgrey);}
+.backlink{
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  background:none;border:none;color:var(--cardinal);cursor:pointer;
+  padding:0;margin:26px 0 0;display:inline-flex;align-items:center;gap:6px;
+}
+.backlink:hover{color:var(--cardinal-dark);}
+.backlink svg{width:14px;height:14px;}
+.group > .gsub{font-size:14.5px;color:var(--coolgrey);margin:0 0 14px;max-width:62ch;}
 
 /* ---------- items ---------- */
 .item{
@@ -217,6 +296,19 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 .body.statics dl{margin-top:4px;}
 .body.statics h3:first-child{margin-top:0;}
 
+/* ---------- reference band ---------- */
+.refband{
+  margin:clamp(40px,5vw,60px) 0 0;
+  border-top:2px solid var(--black);
+  padding:clamp(20px,3vw,26px) 0 0;
+}
+.refeyebrow{
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--coolgrey);margin:0;
+}
+.refband .numbers{margin:18px 0 0;}
+.refband .contacts{margin:38px 0 0;}
+
 /* ---------- numbers ---------- */
 .numbers{margin:44px 0 0;}
 .numbers h2{
@@ -229,7 +321,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
 }
 .numbers div.n{
-  border-top:2px solid var(--black);padding:12px 16px 16px 0;
+  border-top:1px solid var(--line);padding:12px 16px 16px 0;
 }
 .numbers dt{
   font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1;
@@ -275,7 +367,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   html{scroll-behavior:auto;}
 }
 @media print{
-  .identity,.searchbar,.quick,.views,.count,.chev{display:none !important;}
+  .identity,.searchwrap,.tiles,.views,.count,.chev{display:none !important;}
   .body{display:block !important;}
   body{font-size:11pt;}
   .item{break-inside:avoid;}
@@ -288,24 +380,26 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 <div class="wrap">
   <header class="hero">
     <p class="eyebrow">Continuing Studies</p>
-    <h1>Instructor Handbook</h1>
+    <h1>What do you need?</h1>
     <p class="lede">Deadlines, forms, policies, and who to contact, for teaching with Continuing Studies.</p>
+  </header>
 
+  <div class="searchwrap" id="searchwrap">
     <div class="searchbar">
       <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="#53565A" stroke-width="2.2" aria-hidden="true">
         <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>
       </svg>
-      <label for="q" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Search the handbook</label>
+      <label for="q" class="sr-only">Search for an answer</label>
       <input id="q" type="search" autocomplete="off" placeholder="Try &quot;reimbursement&quot;, &quot;guest speaker&quot;, &quot;locked out&quot;">
       <button type="button" class="clear" id="clearBtn" hidden>Clear</button>
     </div>
     <p class="count" id="count" role="status" aria-live="polite"></p>
+  </div>
 
-    <nav class="quick" aria-label="Common questions">
-      <h2>Common questions</h2>
-      <ul id="quickList"></ul>
-    </nav>
-  </header>
+  <nav class="tiles" id="tiles" aria-label="Common situations">
+    <h2>Or start from a situation</h2>
+    <div class="tilegrid" id="tileGrid"></div>
+  </nav>
 
   <div class="views" role="tablist" aria-label="How to browse">
     <button type="button" role="tab" id="tab-when" aria-selected="true" aria-controls="content">Course timeline</button>
@@ -313,6 +407,9 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   </div>
 
   <main id="content" role="tabpanel" aria-labelledby="tab-when"></main>
+
+  <div class="refband">
+  <p class="refeyebrow">Reference</p>
 
   <section class="numbers" aria-labelledby="numbers-h">
     <h2 id="numbers-h">Deadlines and limits</h2>
@@ -332,6 +429,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
       </ul>
     </div>
   </section>
+  </div>
 
 </div>
 
@@ -945,15 +1043,27 @@ const CONTACTS = [
    list:[]}
 ];
 
+/* Phrased as the situation an instructor is actually in. */
+const ICON = {
+  door:'<path d="M5 3h11v18H5z"/><path d="M12 12h.01"/><path d="M16 21h3"/>',
+  person:'<circle cx="9" cy="8" r="3.4"/><path d="M3.5 20c0-3.3 2.5-5.6 5.5-5.6 1 0 2 .3 2.8.7"/><path d="M16 15l5 5M21 15l-5 5"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="15.5" rx="1"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M10 14l4 4M14 14l-4 4"/>',
+  receipt:'<path d="M6 2.5h12v19l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5"/>',
+  mic:'<rect x="9.5" y="2.5" width="5" height="10" rx="2.5"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4M9 21h6"/>',
+  doc:'<path d="M6 2.5h8l4 4v15H6z"/><path d="M13.5 2.5v4.5H18"/><path d="M9 15l2.2 2.2L15.5 13"/>',
+  video:'<rect x="2.5" y="6" width="13" height="12" rx="1.5"/><path d="M15.5 11l6-3.5v9l-6-3.5z"/>',
+  mail:'<rect x="2.5" y="5" width="19" height="14" rx="1.5"/><path d="M3 6.5l9 6.5 9-6.5"/>'
+};
+
 const QUICK = [
-  {label:"A student wants to audit", q:"audit"},
-  {label:"I need to cancel a class", q:"cancel or reschedule"},
-  {label:"Getting reimbursed", q:"reimbursed"},
-  {label:"Inviting a guest speaker", q:"guest speaker"},
-  {label:"Submitting grades", q:"final grades"},
-  {label:"A student is disruptive", q:"disruptive"},
-  {label:"What is my official title?", q:"official title"},
-  {label:"Starting my Zoom meeting", q:"start your class meeting"}
+  {label:"I can't get into my room", q:"locked out",                  icon:"door"},
+  {label:"A student is disruptive",  q:"disruptive",                  icon:"person"},
+  {label:"I have to cancel a class", q:"cancel or reschedule",        icon:"calendar"},
+  {label:"I bought something",       q:"reimbursement",               icon:"receipt"},
+  {label:"I want a guest speaker",   q:"guest speaker",               icon:"mic"},
+  {label:"Grades are due",           q:"final grades",                icon:"doc"},
+  {label:"My Zoom won't start",      q:"start your class meeting",    icon:"video"},
+  {label:"Who do I email?",          q:"who to email",                icon:"mail"}
 ];
 
 /* ------------------------------------------------------------------
@@ -967,6 +1077,7 @@ const tabWhen   = document.getElementById("tab-when");
 const tabTopic  = document.getElementById("tab-topic");
 
 let mode = "when";
+let openTopic = null;
 
 const PHASE_BY_KEY = Object.fromEntries(PHASES.map(p=>[p.k,p]));
 const TOPIC_BY_KEY = Object.fromEntries(TOPICS.map(t=>[t.k,t]));
@@ -1304,13 +1415,13 @@ function resultHtml(e, res, isBest, bestLabel){
   </div>`;
 }
 
-function groupHtml(g, entries, tagColor, tagLabel, forceOpen){
+function groupHtml(g, entries, forceOpen, step){
   if(!entries.length) return "";
-  const tag = tagColor
-    ? `<div><span class="gtag" style="background:${tagColor}">${tagLabel}</span></div>` : "";
+  const isPhase = typeof step === "number";
   return `
-  <section class="group" aria-labelledby="h-${g.k}">
-    ${tag}
+  <section class="group${isPhase ? " phase" : ""}" aria-labelledby="h-${g.k}">
+    ${isPhase ? `<span class="step" aria-hidden="true">${step}</span>` : ""}
+    ${isPhase ? `<p class="when">${g.label}</p>` : ""}
     <h2 id="h-${g.k}">${g.h}</h2>
     ${entries.map(e=>itemHtml(e, forceOpen)).join("")}
   </section>`;
@@ -1359,9 +1470,9 @@ function render(){
   }
 
   clearBtn.hidden = !searching;
-  const quickNav = document.querySelector("nav.quick");
+  const tileNav  = document.querySelector("nav.tiles");
   const viewTabs = document.querySelector(".views");
-  if(quickNav) quickNav.style.display = searching ? "none" : "";
+  if(tileNav)  tileNav.style.display  = searching ? "none" : "";
   if(viewTabs) viewTabs.style.display = searching ? "none" : "";
 
   const typed = qInput.value.trim();
@@ -1408,17 +1519,58 @@ function render(){
       <h2>Search results</h2>
       ${sectionsWin ? staticsHtml + entriesHtml : entriesHtml + staticsHtml}
     </section>`;
+    wireContent();
     return;
   }
 
   if(mode === "when"){
-    content.innerHTML = PHASES.map(p =>
-      groupHtml(p, matches.filter(e=>e.ph===p.k), p.color, p.label, false)
-    ).join("");
+    let n = 0;
+    content.innerHTML = PHASES.map(p => {
+      const rows = matches.filter(e => e.ph === p.k);
+      if(!rows.length) return "";
+      n++;
+      return groupHtml(p, rows, false, n);
+    }).join("");
   }else if(mode === "topic"){
-    content.innerHTML = TOPICS.map(t =>
-      groupHtml(t, matches.filter(e=>e.tp===t.k), null, null, false)
-    ).join("");
+    if(openTopic){
+      const t = TOPIC_BY_KEY[openTopic];
+      content.innerHTML =
+        `<button type="button" class="backlink" id="backTopics">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+           All topics
+         </button>` +
+        groupHtml(t, matches.filter(e => e.tp === openTopic), false);
+    }else{
+      content.innerHTML = `<div class="topicgrid">` + TOPICS.map(t => {
+        const n = ENTRIES.filter(e => e.tp === t.k).length;
+        return `<button type="button" data-topic="${t.k}">
+          <span class="tname">${t.h}</span>
+          <span class="tcount">${n} ${n === 1 ? "entry" : "entries"}</span>
+        </button>`;
+      }).join("") + `</div>`;
+    }
+  }
+  wireContent();
+}
+
+/* click handlers for elements render() just created */
+function wireContent(){
+  content.querySelectorAll("button[data-topic]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      openTopic = btn.dataset.topic;
+      render();
+      const h = content.querySelector("h2");
+      if(h) h.scrollIntoView({behavior:"smooth", block:"center"});
+    });
+  });
+  const back = document.getElementById("backTopics");
+  if(back){
+    back.addEventListener("click", ()=>{
+      openTopic = null;
+      render();
+      const tabs = document.querySelector(".views");
+      if(tabs) tabs.scrollIntoView({behavior:"smooth", block:"start"});
+    });
   }
 }
 
@@ -1460,6 +1612,7 @@ const TABS  = {when:tabWhen, topic:tabTopic};
 
 function setMode(next, focus){
   mode = next;
+  openTopic = null;
   MODES.forEach(m=>{
     const sel = m === mode;
     TABS[m].setAttribute("aria-selected", String(sel));
@@ -1482,20 +1635,33 @@ MODES.forEach(m=>{
 tabTopic.tabIndex = -1;
 
 /* ---------- quick links, numbers, contacts ---------- */
-const quickList = document.getElementById("quickList");
+const tileGrid = document.getElementById("tileGrid");
 QUICK.forEach(item=>{
-  const li = document.createElement("li");
-  const b  = document.createElement("button");
+  const b = document.createElement("button");
   b.type = "button";
-  b.textContent = item.label;
+  b.innerHTML =
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ` +
+    `stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[item.icon]}</svg>` +
+    `<span>${item.label}</span>`;
   b.addEventListener("click", ()=>{
     qInput.value = item.q;
     render();
-    content.scrollIntoView({behavior:"smooth", block:"start"});
+    const sw = document.getElementById("searchwrap");
+    if(sw) sw.scrollIntoView({behavior:"smooth", block:"start"});
   });
-  li.appendChild(b);
-  quickList.appendChild(li);
+  tileGrid.appendChild(b);
 });
+
+/* the search bar tightens once it sticks to the top */
+const searchwrap = document.getElementById("searchwrap");
+if(searchwrap){
+  const onScroll = ()=>{
+    const pinned = searchwrap.getBoundingClientRect().top <= 0.5;
+    searchwrap.classList.toggle("pinned", pinned);
+  };
+  window.addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+}
 
 const numbersList = document.getElementById("numbersList");
 NUMBERS.forEach(x=>{
