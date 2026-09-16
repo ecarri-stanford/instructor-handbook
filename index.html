@@ -202,6 +202,16 @@ details[open] .chev{transform:rotate(180deg);}
 }
 .meta span{display:inline-block;margin-right:16px;}
 
+.jump{display:block;}
+.jump button{
+  font-family:var(--sans);font-size:16.5px;font-weight:600;text-align:left;width:100%;
+  background:none;border:none;border-top:1px solid var(--line);
+  padding:14px 0;cursor:pointer;color:var(--black);
+}
+.jump button:last-child{border-bottom:1px solid var(--line);}
+.jump button:hover{color:var(--cardinal);}
+.jump button span{display:block;font-weight:400;font-size:14px;color:var(--coolgrey);margin-top:3px;}
+
 /* ---------- progress tracker (opt-in view only) ---------- */
 .tracker{background:var(--line-soft);padding:18px;margin:26px 0 0;}
 .tracker h2{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2.4vw,25px);margin:0 0 6px;}
@@ -1011,6 +1021,78 @@ const ACT = {
   evals:0, grades:0, waiver:1, deposit:1
 };
 
+/* Plain-language words instructors actually type, mapped onto entries.
+   Searched alongside the entry text so "locked out" or "drunk student" land. */
+const ALIASES = {
+  css:"assistant helper TA teaching assistant course assistant extra help",
+  room:"classroom request which room room assignment class size seating",
+  cap:"enrollment limit cap class size too many students",
+  training:"stars mandatory required compliance harassment violence safety",
+  hiring:"background check i9 onboarding paperwork offer letter hired start",
+  textbooks:"books textbook bookstore order reading list required reading",
+  syllabus:"syllabus submit due public course description",
+  firstassign:"first assignment prework homework before class starts survey",
+  zoomacct:"zoom account email address license set up",
+  panoptoset:"panopto recording capture set up record my class",
+  slack:"slack channel contact staff message help during class",
+  visitroom:"see my room visit classroom find my classroom where is my class location",
+  canvasprep:"canvas page course site publish set up post materials",
+  welcome:"welcome message announcement email my students before class",
+  roster:"roster class list who is enrolled student names download",
+  techreq:"computer requirements laptop browser safari chrome firefox webcam microphone headset equipment buy gear internet speed",
+  av:"projector hdmi adapter cable smartpanel smart panel screen display sound",
+  wifi:"wifi wireless internet network students cannot connect guest",
+  startmeeting:"zoom will not start cannot start meeting host link join launch class",
+  firstminutes:"first class orientation introduction etiquette ground rules",
+  attendance:"audit auditing sit in unregistered crasher guest attendance take roll",
+  techfail:"broken not working frozen no audio no video microphone camera glitch help now",
+  recording:"recordings video posted canvas missed class rewatch download share",
+  bots:"ai bot notetaker note taker otter fireflies transcription recording bot",
+  officehours:"office hours availability meet students",
+  behavior:"disruptive rude angry racist sexist offensive intoxicated drunk problem student complaint remove kick out difficult",
+  conduct:"code of conduct rules expectations misconduct cheating plagiarism",
+  schedchange:"sick illness emergency cancel class reschedule miss a class covid make up session",
+  guest:"guest speaker visitor honorarium pay a speaker bring someone in",
+  reimburse:"receipt expense money back refund buy purchase reimburse supplies",
+  copies:"print printing photocopy copies handouts fedex kinkos paper",
+  copyright:"copyright fair use permission scan article pdf posting readings",
+  library:"library books borrow research id card",
+  digitaltools:"app tool software discord facebook linkedin third party signup",
+  ferpa:"privacy ferpa confidential roster grades bcc student data",
+  contactuse:"email my students marketing newsletter promote solicit mailing list",
+  coi:"sell my book my product conflict of interest promote my business",
+  title:"title lecturer professor adjunct faculty resume cv linkedin what do I call myself",
+  logo:"logo branding stanford name trademark marketing media kit promote my course",
+  accommodations:"disability accessible accommodation captions oae accessibility",
+  assignments:"paper length assignment project portfolio presentation exam how long",
+  waitlist:"waitlist full course cancelled enrollment low sign up",
+  evals:"evaluation survey feedback ratings scores",
+  grades:"grades submit grading deadline transcript grade entry",
+  gradeoptions:"incomplete pass fail credit no credit letter grade NGR what grade",
+  sop:"certificate statement of participation short course proof",
+  waiver:"free course tuition waiver discount take a class benefit perk",
+  payschedule:"paycheck when do I get paid salary pay date payday",
+  deposit:"direct deposit bank account taxes w4 withholding sequoia",
+  w2:"w2 taxes tax form tax year",
+  timecard:"timecard timesheet hours overtime hourly",
+  worklocation:"travel abroad out of state moving work location california international",
+  emailaccess:"lose access account ends contract over leaving quit fired email stops working",
+  tools:"logins passwords systems accounts sunet what do I log into"
+};
+
+/* Sections that live outside the entry list but that people search for. */
+const STATIC_BLOCKS = [
+  {key:"urgent", sel:".urgent", label:"On campus, right now",
+   hint:"Lockouts, security, emergencies, and mid-class tech help",
+   alias:"locked out lockout key door cannot get in emergency 911 police security dispatcher facilities lbre urgent help now"},
+  {key:"contacts", sel:".contacts", label:"Who to email",
+   hint:"Which inbox handles what, and the phone number",
+   alias:"who do I email contact phone call support inbox address staff"},
+  {key:"numbers", sel:".numbers", label:"Numbers worth memorizing",
+   hint:"The budget limits and deadlines in one place",
+   alias:"deadline limit budget how much how long how many dollars"}
+];
+
 const BADGE = {
   deadline:{cls:"b-deadline", label:"Deadline"},
   required:{cls:"b-required", label:"Required"},
@@ -1022,16 +1104,54 @@ const BADGE = {
 const stripper = document.createElement("div");
 ENTRIES.forEach(e=>{
   stripper.innerHTML = e.body;
-  e._hay = (
-    e.t + " " + (stripper.textContent || "") + " " +
-    PHASE_BY_KEY[e.ph].h + " " + TOPIC_BY_KEY[e.tp].h + " " +
-    (e.b || []).map(k=>BADGE[k].label).join(" ")
-  ).toLowerCase();
+  e._title = e.t.toLowerCase();
+  e._alias = ((ALIASES[e.id] || "") + " " +
+              PHASE_BY_KEY[e.ph].h + " " + TOPIC_BY_KEY[e.tp].h + " " +
+              (e.b || []).map(k=>BADGE[k].label).join(" ")).toLowerCase();
+  e._body  = (stripper.textContent || "").toLowerCase();
+  e._hay   = e._title + " " + e._alias + " " + e._body;
 });
 stripper.innerHTML = "";
 
 function esc(s){
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* Match at a word start, so "locked" does not match "blocked" and
+   "reimburse" still matches "reimbursement". */
+/* Filler words that match everything and drown out the real terms. */
+const STOP = new Set(["a","an","the","and","or","of","to","for","in","on","at","is","it",
+  "do","does","did","i","my","me","we","our","you","your","how","what","can","should",
+  "would","be","am","are","was","if","that","this","with","from","about","get","got",
+  "there","their","have","has","need","want"]);
+
+function termRegex(t){
+  return new RegExp("\\b" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+}
+function scoreEntry(e, res){
+  let score = 0, hits = 0;
+  res.forEach(re=>{
+    let h = 0;
+    if(re.test(e._title)) h += 8;
+    if(re.test(e._alias)) h += 4;
+    if(re.test(e._body))  h += 1;
+    if(h){ hits++; score += h; }
+  });
+  return {score, hits};
+}
+
+let staticHay = null;
+function matchStatics(terms){
+  if(!staticHay){
+    staticHay = STATIC_BLOCKS.map(b=>{
+      const el = document.querySelector(b.sel);
+      return Object.assign({}, b, {
+        hay: ((el ? el.innerText : "") + " " + b.label + " " + b.hint + " " + b.alias).toLowerCase()
+      });
+    });
+  }
+  const res = terms.map(termRegex);
+  return staticHay.filter(b => res.every(re => re.test(b.hay)));
 }
 
 function itemHtml(e, forceOpen, withCheck){
@@ -1082,35 +1202,81 @@ function groupHtml(g, entries, tagColor, tagLabel, forceOpen, withCheck){
 function render(){
   const q = qInput.value.trim().toLowerCase();
   const searching = q.length > 0;
-  const terms = q.split(/\s+/).filter(Boolean);
-  const matches = searching
-    ? ENTRIES.filter(e => terms.every(t => e._hay.includes(t)))
-    : ENTRIES;
+  const raw = q.split(/\s+/).filter(Boolean);
+  const kept = raw.filter(t => !STOP.has(t));
+  const terms = kept.length ? kept : raw;
+  let matches = ENTRIES;
+  let statics = [];
+  let loose = false;
+
+  if(searching){
+    const res = terms.map(termRegex);
+    const scored = ENTRIES
+      .map(e => Object.assign({e}, scoreEntry(e, res)))
+      .filter(x => x.hits > 0)
+      .sort((a, b) => b.score - a.score);
+
+    const full = scored.filter(x => x.hits === terms.length);
+    if(full.length){
+      matches = full.map(x => x.e);
+    }else if(terms.length > 1 && scored.length){
+      matches = scored.map(x => x.e);
+      loose = true;
+    }else{
+      matches = [];
+    }
+    statics = matchStatics(terms);
+    if(loose && statics.length){
+      /* the real answer is a page section; weak entry matches are just noise */
+      matches = [];
+      loose = false;
+    }
+  }
 
   clearBtn.hidden = !searching;
   slashHint.hidden = searching || document.activeElement === qInput;
 
+  const typed = qInput.value.trim();
+  const total = matches.length + statics.length;
+
   if(searching){
-    countEl.textContent = matches.length === 0
-      ? `Nothing matches "${qInput.value.trim()}". Try a single word, like reimbursement, roster, Panopto, or honorarium.`
-      : `${matches.length} of ${ENTRIES.length} ${matches.length===1?"entry":"entries"} match "${qInput.value.trim()}".`;
+    if(total === 0){
+      countEl.textContent = `Nothing matches "${typed}". Try one word, like reimbursement, roster, Panopto, or honorarium.`;
+    }else if(loose){
+      countEl.textContent = `No entry contains every word in "${typed}". Showing the closest matches, best first.`;
+    }else{
+      countEl.textContent = `${total} ${total===1?"result":"results"} for "${typed}".`;
+    }
   }else{
     countEl.textContent = "";
   }
 
-  if(matches.length === 0){
-    content.innerHTML = `<p class="empty">No results. The handbook covers course setup, technology, classrooms, materials and money, students and conduct, grading, and employment. If it is not here, email Continuing Studies.</p>`;
+  if(searching && total === 0){
+    content.innerHTML = `<p class="empty">No results. This covers course setup, technology, classrooms, materials and money, students and conduct, grading, and employment. If it is not here, email Continuing Studies.</p>`;
     return;
   }
 
   /* searching flattens the view and opens what matched */
   if(searching){
-    content.innerHTML = `
+    const jumpHtml = statics.length ? `
     <section class="group">
-      <h2>Search results</h2>
+      <h2>${matches.length ? "Elsewhere on this page" : "Further down this page"}</h2>
+      <p class="gsub">This answer sits outside the entry list.</p>
+      <div class="jump">${statics.map(b =>
+        `<button type="button" data-jump="${b.sel}">${b.label}<span>${b.hint}</span></button>`
+      ).join("")}</div>
+    </section>` : "";
+
+    const entriesHtml = matches.length ? `
+    <section class="group">
+      <h2>${statics.length ? "Matching entries" : "Search results"}</h2>
       <p class="gsub">Grouping is set aside while you search, so the closest answer is at the top.</p>
       ${matches.map(e=>itemHtml(e, true)).join("")}
-    </section>`;
+    </section>` : "";
+
+    content.innerHTML = statics.length && !matches.length
+      ? jumpHtml
+      : entriesHtml + jumpHtml;
     wire();
     return;
   }
@@ -1143,6 +1309,12 @@ function render(){
 }
 
 function wire(){
+  content.querySelectorAll("button[data-jump]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const el = document.querySelector(btn.dataset.jump);
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  });
   const reset = document.getElementById("resetBtn");
   if(reset){
     reset.addEventListener("click", ()=>{
