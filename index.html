@@ -1087,7 +1087,7 @@ const ALIASES = {
 const STATIC_BLOCKS = [
   {key:"urgent", sel:".urgent", label:"On campus, right now",
    hint:"Lockouts, security, emergencies, and mid-class tech help",
-   alias:"locked out lockout locked lost key keys door doors cannot get in classroom building emergency 911 police security dispatcher facilities lbre fire ambulance injured urgent help now right now after hours"},
+   alias:"locked out lockout locked lost key keys keycard badge door doors room rooms cant can't cannot get in shut out classroom building emergency 911 police security dispatcher facilities lbre fire ambulance injured urgent help now right now after hours"},
   {key:"contacts", sel:".contacts", label:"Who to email",
    hint:"Which inbox handles what, and the phone number",
    alias:"who do I email contact phone call support inbox address staff"},
@@ -1339,9 +1339,10 @@ function render(){
   let statics = [];
   let loose = false;
   let topEntry = 0;
+  let res = [];
 
   if(searching){
-    const res = terms.map(termRegex);
+    res = terms.map(termRegex);
     const scored = ENTRIES
       .map(e => Object.assign({e}, scoreEntry(e, res)))
       .filter(x => x.hits > 0)
