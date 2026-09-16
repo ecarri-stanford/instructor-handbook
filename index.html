@@ -145,14 +145,7 @@ h1{
   display:block;
   border-top:1px solid var(--line);
 }
-.item.checkable{
-  display:grid;grid-template-columns:34px 1fr;align-items:start;
-}
 .item:last-child{border-bottom:1px solid var(--line);}
-.item .box{margin:17px 0 0;justify-self:start;}
-.item input[type=checkbox]{
-  width:20px;height:20px;accent-color:var(--cardinal);cursor:pointer;margin:0;
-}
 details{min-width:0;}
 summary{
   list-style:none;cursor:pointer;padding:14px 0;
@@ -161,7 +154,6 @@ summary{
 summary::-webkit-details-marker{display:none;}
 summary:hover .ttl{color:var(--cardinal);}
 .ttl{font-size:16.5px;font-weight:600;color:var(--black);}
-.item.done .ttl{color:var(--coolgrey);text-decoration:line-through;}
 .chev{
   margin-left:auto;flex:none;width:14px;height:14px;
   color:var(--coolgrey);transition:transform .15s ease;
@@ -229,23 +221,6 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 .body.statics dl{margin-top:4px;}
 .body.statics h3:first-child{margin-top:0;}
 
-/* ---------- progress tracker (opt-in view only) ---------- */
-.tracker{background:var(--line-soft);padding:18px;margin:26px 0 0;}
-.tracker h2{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2.4vw,25px);margin:0 0 6px;}
-.tracker p{font-size:14.5px;color:var(--black);margin:0 0 14px;max-width:64ch;}
-.tracker .bar{height:10px;background:var(--white);margin:0 0 8px;max-width:420px;}
-.tracker .bar span{display:block;height:100%;background:var(--cardinal);}
-.tracker .tally{font-size:14.5px;font-weight:700;margin:0 0 14px;}
-.tracker button{
-  font-family:var(--sans);font-size:13.5px;font-weight:600;
-  background:var(--black);color:var(--white);border:none;padding:9px 14px;cursor:pointer;
-}
-.tracker button:hover{background:var(--cardinal-dark);}
-.optional{
-  font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--coolgrey);border:1px solid var(--line);padding:2px 7px;white-space:nowrap;flex:none;
-}
-
 /* ---------- numbers ---------- */
 .numbers{margin:44px 0 0;}
 .numbers h2{
@@ -304,7 +279,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   html{scroll-behavior:auto;}
 }
 @media print{
-  .identity,.searchbar,.quick,.views,.count,.item .box,.chev{display:none !important;}
+  .identity,.searchbar,.quick,.views,.count,.chev{display:none !important;}
   .body{display:block !important;}
   body{font-size:11pt;}
   .item{break-inside:avoid;}
@@ -340,7 +315,6 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   <div class="views" role="tablist" aria-label="How to browse">
     <button type="button" role="tab" id="tab-when" aria-selected="true" aria-controls="content">By when it happens</button>
     <button type="button" role="tab" id="tab-topic" aria-selected="false" aria-controls="content">By topic</button>
-    <button type="button" role="tab" id="tab-check" aria-selected="false" aria-controls="content">Did I miss anything?</button>
   </div>
 
   <main id="content" role="tabpanel" aria-labelledby="tab-when"></main>
@@ -990,7 +964,6 @@ const QUICK = [
 /* ------------------------------------------------------------------
    Rendering and behavior
    ------------------------------------------------------------------ */
-const STORE_KEY = "csp-handbook-done-v1";
 const content   = document.getElementById("content");
 const qInput    = document.getElementById("q");
 const countEl   = document.getElementById("count");
@@ -998,31 +971,11 @@ const clearBtn  = document.getElementById("clearBtn");
 const slashHint = document.getElementById("slashHint");
 const tabWhen   = document.getElementById("tab-when");
 const tabTopic  = document.getElementById("tab-topic");
-const tabCheck  = document.getElementById("tab-check");
 
 let mode = "when";
-let done = new Set();
-try{
-  const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
-  if(Array.isArray(saved)) done = new Set(saved);
-}catch(e){ /* storage unavailable or corrupt; start empty */ }
-
-function saveDone(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify([...done])); }
-  catch(e){ /* private browsing; checkmarks just won't persist */ }
-}
 
 const PHASE_BY_KEY = Object.fromEntries(PHASES.map(p=>[p.k,p]));
 const TOPIC_BY_KEY = Object.fromEntries(TOPICS.map(t=>[t.k,t]));
-
-/* The opt-in checklist covers actual tasks, not reference policy.
-   0 = everyone does this, 1 = only if it applies to your course. */
-const ACT = {
-  hiring:0, training:0, room:0, css:1, cap:1,
-  textbooks:0, syllabus:0, firstassign:1, zoomacct:0, panoptoset:1, slack:0,
-  techreq:0, canvasprep:0, visitroom:1, roster:0, welcome:0,
-  evals:0, grades:0, waiver:1, deposit:1
-};
 
 /* Plain-language words instructors actually type, mapped onto entries.
    Searched alongside the entry text so "locked out" or "drunk student" land. */
@@ -1266,24 +1219,16 @@ function matchStatics(res){
     .sort((a, b) => b.score - a.score);
 }
 
-function itemHtml(e, forceOpen, withCheck){
+function itemHtml(e, forceOpen){
   const badges = (e.b || []).map(k=>
     `<span class="badge ${BADGE[k].cls}">${BADGE[k].label}</span>`
   ).join("");
-  const isDone = withCheck && done.has(e.id);
-  const optTag = (withCheck && ACT[e.id] === 1)
-    ? `<span class="optional">Only if it applies</span>` : "";
-  const check = withCheck
-    ? `<span class="box"><input type="checkbox" ${isDone?"checked":""} data-chk="${e.id}"
-             aria-label="Mark as done: ${esc(e.t)}"></span>`
-    : "";
   return `
-  <div class="item ${withCheck?"checkable":""} ${isDone?"done":""}" data-id="${e.id}">
-    ${check}
+  <div class="item" data-id="${e.id}">
     <details ${forceOpen?"open":""} id="d-${e.id}">
       <summary>
         <span class="ttl">${esc(e.t)}</span>
-        ${badges}${optTag}
+        ${badges}
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
       </summary>
       <div class="body">
@@ -1365,7 +1310,7 @@ function resultHtml(e, res, isBest, bestLabel){
   </div>`;
 }
 
-function groupHtml(g, entries, tagColor, tagLabel, forceOpen, withCheck){
+function groupHtml(g, entries, tagColor, tagLabel, forceOpen){
   if(!entries.length) return "";
   const tag = tagColor
     ? `<div><span class="gtag" style="background:${tagColor}">${tagLabel}</span></div>` : "";
@@ -1373,7 +1318,7 @@ function groupHtml(g, entries, tagColor, tagLabel, forceOpen, withCheck){
   <section class="group" aria-labelledby="h-${g.k}">
     ${tag}
     <h2 id="h-${g.k}">${g.h}</h2>
-    ${entries.map(e=>itemHtml(e, forceOpen, withCheck)).join("")}
+    ${entries.map(e=>itemHtml(e, forceOpen)).join("")}
   </section>`;
 }
 
@@ -1470,63 +1415,18 @@ function render(){
       <h2>Search results</h2>
       ${sectionsWin ? staticsHtml + entriesHtml : entriesHtml + staticsHtml}
     </section>`;
-    wire();
     return;
   }
 
   if(mode === "when"){
     content.innerHTML = PHASES.map(p =>
-      groupHtml(p, matches.filter(e=>e.ph===p.k), p.color, p.label, false, false)
+      groupHtml(p, matches.filter(e=>e.ph===p.k), p.color, p.label, false)
     ).join("");
   }else if(mode === "topic"){
     content.innerHTML = TOPICS.map(t =>
-      groupHtml(t, matches.filter(e=>e.tp===t.k), null, null, false, false)
-    ).join("");
-  }else{
-    const tasks = ENTRIES.filter(e => e.id in ACT);
-    const finished = tasks.filter(e => done.has(e.id)).length;
-    const pct = tasks.length ? Math.round((finished / tasks.length) * 100) : 0;
-    content.innerHTML = `
-    <div class="tracker">
-      <h2>Optional progress check</h2>
-      <p>For confirming you have not missed a form. Nothing here is submitted, monitored, or shared.</p>
-      <div class="bar" role="presentation"><span style="width:${pct}%"></span></div>
-      <p class="tally">${finished} of ${tasks.length} done</p>
-      <button type="button" id="resetBtn">Clear all checkmarks</button>
-    </div>
-    ` + PHASES.map(p =>
-      groupHtml(p, tasks.filter(e=>e.ph===p.k), p.color, p.label, false, true)
+      groupHtml(t, matches.filter(e=>e.tp===t.k), null, null, false)
     ).join("");
   }
-  wire();
-}
-
-function wire(){
-  const reset = document.getElementById("resetBtn");
-  if(reset){
-    reset.addEventListener("click", ()=>{
-      done.clear();
-      saveDone();
-      render();
-    });
-  }
-  content.querySelectorAll("input[data-chk]").forEach(box=>{
-    box.addEventListener("change", ()=>{
-      const id = box.dataset.chk;
-      if(box.checked) done.add(id); else done.delete(id);
-      saveDone();
-      const row = box.closest(".item");
-      if(row) row.classList.toggle("done", box.checked);
-      const tally = content.querySelector(".tally");
-      const fill  = content.querySelector(".bar span");
-      if(tally && fill){
-        const tasks = ENTRIES.filter(x => x.id in ACT);
-        const n = tasks.filter(x => done.has(x.id)).length;
-        tally.textContent = `${n} of ${tasks.length} done`;
-        fill.style.width = (tasks.length ? Math.round((n/tasks.length)*100) : 0) + "%";
-      }
-    });
-  });
 }
 
 /* open one entry by id, from a quick link or a number tile */
@@ -1564,8 +1464,8 @@ document.addEventListener("keydown", e=>{
 });
 
 /* ---------- tabs ---------- */
-const MODES = ["when", "topic", "check"];
-const TABS  = {when:tabWhen, topic:tabTopic, check:tabCheck};
+const MODES = ["when", "topic"];
+const TABS  = {when:tabWhen, topic:tabTopic};
 
 function setMode(next, focus){
   mode = next;
@@ -1589,7 +1489,6 @@ MODES.forEach(m=>{
   });
 });
 tabTopic.tabIndex = -1;
-tabCheck.tabIndex = -1;
 
 /* ---------- quick links, numbers, contacts ---------- */
 const quickList = document.getElementById("quickList");
