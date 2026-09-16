@@ -223,16 +223,11 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   line-height:1.5;margin:5px 0 0;max-width:72ch;
 }
 .snippet mark{background:#FEDD5C;color:var(--black);padding:0 2px;}
-
-.jump{display:block;}
-.jump button{
-  font-family:var(--sans);font-size:16.5px;font-weight:600;text-align:left;width:100%;
-  background:none;border:none;border-top:1px solid var(--line);
-  padding:14px 0;cursor:pointer;color:var(--black);
-}
-.jump button:last-child{border-bottom:1px solid var(--line);}
-.jump button:hover{color:var(--cardinal);}
-.jump button span{display:block;font-weight:400;font-size:14px;color:var(--coolgrey);margin-top:3px;}
+.body.statics{padding-bottom:18px;}
+.body.statics .urgent{border-top:none;padding-top:0;margin-top:0;}
+.body.statics .cgrid{margin-top:4px;}
+.body.statics dl{margin-top:4px;}
+.body.statics h3:first-child{margin-top:0;}
 
 /* ---------- progress tracker (opt-in view only) ---------- */
 .tracker{background:var(--line-soft);padding:18px;margin:26px 0 0;}
@@ -1224,6 +1219,31 @@ function itemHtml(e, forceOpen, withCheck){
   </div>`;
 }
 
+function staticResultHtml(b, label){
+  const el = document.querySelector(b.sel);
+  if(!el) return "";
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll("[id]").forEach(n => n.removeAttribute("id"));
+  /* the section's own heading duplicates the result title; inner h3s stay */
+  const head = clone.firstElementChild;
+  if(head && /^H[23]$/.test(head.tagName)) head.remove();
+  const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>`;
+  return `
+  <div class="item best">
+    <details open>
+      <summary class="ressum">
+        <span class="crumb">On this page</span>
+        <span class="line1">
+          <span class="bestflag">${label}</span>
+          <span class="ttl">${b.label}</span>
+          ${chev}
+        </span>
+      </summary>
+      <div class="body statics">${clone.innerHTML}</div>
+    </details>
+  </div>`;
+}
+
 function resultHtml(e, res, isBest, bestLabel){
   const badges = (e.b || []).map(k=>
     `<span class="badge ${BADGE[k].cls}">${BADGE[k].label}</span>`
@@ -1313,6 +1333,10 @@ function render(){
   }
 
   clearBtn.hidden = !searching;
+  const quickNav = document.querySelector("nav.quick");
+  const viewTabs = document.querySelector(".views");
+  if(quickNav) quickNav.style.display = searching ? "none" : "";
+  if(viewTabs) viewTabs.style.display = searching ? "none" : "";
   slashHint.hidden = searching || document.activeElement === qInput;
 
   const typed = qInput.value.trim();
@@ -1337,26 +1361,25 @@ function render(){
 
   /* searching flattens the view and opens what matched */
   if(searching){
-    const jumpHtml = statics.length ? `
-    <section class="group">
-      <h2>${matches.length ? "Elsewhere on this page" : "Further down this page"}</h2>
-      <div class="jump">${statics.map(b =>
-        `<button type="button" data-jump="${b.sel}">${b.label}<span>${b.hint}</span></button>`
-      ).join("")}</div>
-    </section>` : "";
-
     const res = terms.map(termRegex);
     const bestLabel = loose ? "Closest match" : "Best match";
-    const entriesHtml = matches.length ? `
-    <section class="group">
-      <h2>${statics.length ? "Matching entries" : "Search results"}</h2>
-      ${resultHtml(matches[0], res, true, bestLabel)}
-      ${matches.slice(1).map(e=>resultHtml(e, res, false)).join("")}
-    </section>` : "";
 
-    content.innerHTML = statics.length && !matches.length
-      ? jumpHtml
-      : entriesHtml + jumpHtml;
+    const staticsHtml = statics
+      .map((b, i) => staticResultHtml(b, i === 0 ? bestLabel : "Also here"))
+      .join("");
+
+    const entriesHtml = statics.length
+      ? matches.map(e => resultHtml(e, res, false)).join("")
+      : (matches.length
+          ? resultHtml(matches[0], res, true, bestLabel) +
+            matches.slice(1).map(e => resultHtml(e, res, false)).join("")
+          : "");
+
+    content.innerHTML = `
+    <section class="group">
+      <h2>Search results</h2>
+      ${staticsHtml}${entriesHtml}
+    </section>`;
     wire();
     return;
   }
@@ -1389,12 +1412,6 @@ function render(){
 }
 
 function wire(){
-  content.querySelectorAll("button[data-jump]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const el = document.querySelector(btn.dataset.jump);
-      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
-    });
-  });
   const reset = document.getElementById("resetBtn");
   if(reset){
     reset.addEventListener("click", ()=>{
