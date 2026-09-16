@@ -201,6 +201,29 @@ details[open] .chev{transform:rotate(180deg);}
 }
 .meta span{display:inline-block;margin-right:16px;}
 
+.item.best{
+  border:2px solid var(--cardinal);
+  padding:2px 16px;margin:0 0 16px;
+}
+.item.best + .item{border-top:1px solid var(--line);}
+.bestflag{
+  font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  background:var(--cardinal);color:var(--white);padding:3px 8px;flex:none;
+}
+.crumb{
+  display:block;font-size:12px;color:var(--coolgrey);
+  letter-spacing:.02em;margin:0 0 5px;
+}
+summary.ressum{display:block;padding:14px 0;cursor:pointer;list-style:none;}
+summary.ressum::-webkit-details-marker{display:none;}
+summary.ressum:hover .ttl{color:var(--cardinal);}
+summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
+.snippet{
+  display:block;font-size:14px;color:var(--coolgrey);
+  line-height:1.5;margin:5px 0 0;max-width:72ch;
+}
+.snippet mark{background:#FEDD5C;color:var(--black);padding:0 2px;}
+
 .jump{display:block;}
 .jump button{
   font-family:var(--sans);font-size:16.5px;font-weight:600;text-align:left;width:100%;
@@ -1093,7 +1116,8 @@ ENTRIES.forEach(e=>{
   e._alias = ((ALIASES[e.id] || "") + " " +
               PHASE_BY_KEY[e.ph].h + " " + TOPIC_BY_KEY[e.tp].h + " " +
               (e.b || []).map(k=>BADGE[k].label).join(" ")).toLowerCase();
-  e._body  = (stripper.textContent || "").toLowerCase();
+  e._text  = (stripper.textContent || "").replace(/\s+/g, " ").trim();
+  e._body  = e._text.toLowerCase();
   e._hay   = e._title + " " + e._alias + " " + e._body;
 });
 stripper.innerHTML = "";
@@ -1123,6 +1147,35 @@ function scoreEntry(e, res){
     if(h){ hits++; score += h; }
   });
   return {score, hits};
+}
+
+/* One line of the entry's own text around the first match, term highlighted. */
+function snippetFor(e, res){
+  const text = e._text, low = e._body;
+  let idx = -1;
+  res.forEach(re=>{
+    const m = low.search(re);
+    if(m > -1 && (idx === -1 || m < idx)) idx = m;
+  });
+  if(idx === -1) idx = 0;
+
+  let start = Math.max(0, idx - 55);
+  if(start > 0){
+    const sp = text.indexOf(" ", start);
+    if(sp > -1 && sp < start + 25) start = sp + 1;
+  }
+  let end = Math.min(text.length, start + 170);
+  if(end < text.length){
+    const sp = text.lastIndexOf(" ", end);
+    if(sp > start + 90) end = sp;
+  }
+
+  let out = esc(text.slice(start, end));
+  const alt = res.map(r => r.source).join("|");
+  if(alt){
+    out = out.replace(new RegExp("((?:" + alt + ")\\w*)", "gi"), "<mark>$1</mark>");
+  }
+  return (start > 0 ? "&hellip;" : "") + out + (end < text.length ? "&hellip;" : "");
 }
 
 let staticHay = null;
@@ -1167,6 +1220,48 @@ function itemHtml(e, forceOpen, withCheck){
           <span>${PHASE_BY_KEY[e.ph].h}</span>
         </p>
       </div>
+    </details>
+  </div>`;
+}
+
+function resultHtml(e, res, isBest, bestLabel){
+  const badges = (e.b || []).map(k=>
+    `<span class="badge ${BADGE[k].cls}">${BADGE[k].label}</span>`
+  ).join("");
+  const crumb = `${TOPIC_BY_KEY[e.tp].h} &middot; ${PHASE_BY_KEY[e.ph].h}`;
+  const tail = `<p class="meta"><span>Handbook p. ${e.pg}</span><span>${crumb}</span></p>`;
+  const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>`;
+
+  if(isBest){
+    return `
+    <div class="item best" data-id="${e.id}">
+      <details open id="d-${e.id}">
+        <summary class="ressum">
+          <span class="crumb">${crumb}</span>
+          <span class="line1">
+            <span class="bestflag">${bestLabel}</span>
+            <span class="ttl">${esc(e.t)}</span>
+            ${badges}
+            ${chev}
+          </span>
+        </summary>
+        <div class="body">${e.body}${tail}</div>
+      </details>
+    </div>`;
+  }
+
+  return `
+  <div class="item" data-id="${e.id}">
+    <details id="d-${e.id}">
+      <summary class="ressum">
+        <span class="line1">
+          <span class="ttl">${esc(e.t)}</span>
+          ${badges}
+          ${chev}
+        </span>
+        <span class="snippet">${snippetFor(e, res)}</span>
+      </summary>
+      <div class="body">${e.body}${tail}</div>
     </details>
   </div>`;
 }
@@ -1250,10 +1345,13 @@ function render(){
       ).join("")}</div>
     </section>` : "";
 
+    const res = terms.map(termRegex);
+    const bestLabel = loose ? "Closest match" : "Best match";
     const entriesHtml = matches.length ? `
     <section class="group">
       <h2>${statics.length ? "Matching entries" : "Search results"}</h2>
-      ${matches.map(e=>itemHtml(e, true)).join("")}
+      ${resultHtml(matches[0], res, true, bestLabel)}
+      ${matches.slice(1).map(e=>resultHtml(e, res, false)).join("")}
     </section>` : "";
 
     content.innerHTML = statics.length && !matches.length
