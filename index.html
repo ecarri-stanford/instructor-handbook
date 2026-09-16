@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor Handbook | Continuing Studies</title>
+<meta name="description" content="The Continuing Studies Instructor Handbook, made searchable. Find deadlines, policies, and answers by when they happen or by topic.">
+<meta name="theme-color" content="#8C1515">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Stanford central visual identity: identity.stanford.edu
+   Primary: Cardinal Red #8C1515 / White / Black #2E2D29 / Cool Grey #53565A
+   Neutrals from the Black 10% tint scale. Accents used only from the
+   white-text allowlist. Cardinal Red is never tinted; its Light/Dark
+   variants are used only for web hover and active states. */
+:root{
+  --cardinal:#8C1515;
+  --cardinal-dark:#820000;
+  --black:#2E2D29;
+  --coolgrey:#53565A;
+  --line:#D6D5D4;      /* Black 20% */
+  --line-soft:#EBEAEA; /* Black 10% */
+  --white:#FFFFFF;
+  --plum:#620059;
+  --paloalto:#175E54;
+  --skydark:#016895;
+  --lagunita:#007C92;
+  --brick:#9C563F;
+  --archway:#81694C;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",Calibri,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--white);
+  color:var(--black);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--cardinal);text-decoration:underline;text-underline-offset:2px;}
+a:hover{color:var(--cardinal-dark);}
+:focus-visible{outline:3px solid var(--cardinal);outline-offset:2px;}
+
+/* ---------- identity bar ---------- */
+.identity{
+  background:var(--cardinal);
+  color:var(--white);
+  padding:10px clamp(16px,4vw,32px);
+  font-size:13px;
+  letter-spacing:.02em;
+}
+.identity .logo-slot{
+  font-family:var(--sans);
+  font-weight:600;
+}
+
+/* ---------- shell ---------- */
+.wrap{max-width:980px;margin:0 auto;padding:0 clamp(16px,4vw,32px);}
+header.hero{padding:clamp(28px,5vw,52px) 0 clamp(20px,3vw,28px);}
+.eyebrow{
+  font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--coolgrey);margin:0 0 12px;
+}
+h1{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(32px,5.2vw,50px);line-height:1.1;
+  margin:0 0 14px;color:var(--black);
+}
+.lede{font-size:clamp(16px,1.6vw,18px);color:var(--coolgrey);max-width:60ch;margin:0 0 6px;}
+.updated{font-size:13.5px;color:var(--coolgrey);margin:14px 0 0;}
+
+/* ---------- search ---------- */
+.searchbar{position:relative;margin:clamp(20px,3vw,28px) 0 8px;}
+.searchbar input{
+  width:100%;font-family:var(--sans);font-size:17px;
+  padding:16px 108px 16px 46px;
+  border:2px solid var(--black);border-radius:0;
+  background:var(--white);color:var(--black);
+}
+.searchbar input::placeholder{color:var(--coolgrey);opacity:1;}
+.searchbar .mag{
+  position:absolute;left:15px;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;pointer-events:none;
+}
+.searchbar .hint{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-size:12px;color:var(--coolgrey);pointer-events:none;
+}
+.searchbar button.clear{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  background:var(--black);color:var(--white);border:none;
+  padding:7px 12px;cursor:pointer;
+}
+.searchbar button.clear:hover{background:var(--cardinal-dark);}
+.count{font-size:14px;color:var(--coolgrey);min-height:22px;margin:0 0 4px;}
+
+/* ---------- quick asks ---------- */
+.quick{margin:4px 0 26px;}
+.quick h2{
+  font-family:var(--sans);font-size:12px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--coolgrey);
+  margin:0 0 10px;
+}
+.quick ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;}
+.quick button{
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  background:var(--line-soft);color:var(--black);
+  border:none;padding:9px 14px;cursor:pointer;text-align:left;
+}
+.quick button:hover{background:var(--cardinal);color:var(--white);}
+
+/* ---------- view switch ---------- */
+.views{
+  display:flex;gap:0;margin:0 0 4px;
+  border-bottom:2px solid var(--line);
+}
+.views button{
+  font-family:var(--sans);font-size:15px;font-weight:600;
+  background:none;border:none;border-bottom:4px solid transparent;
+  color:var(--coolgrey);padding:12px 18px;cursor:pointer;margin-bottom:-2px;
+}
+.views button:hover{color:var(--black);}
+.views button[aria-selected="true"]{color:var(--cardinal);border-bottom-color:var(--cardinal);}
+
+/* ---------- groups ---------- */
+.group{margin:34px 0 0;}
+.group > h2{
+  font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.6vw,28px);
+  line-height:1.2;margin:0 0 4px;color:var(--black);
+}
+.group > .gsub{font-size:14.5px;color:var(--coolgrey);margin:0 0 14px;max-width:62ch;}
+.gtag{
+  display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--white);padding:4px 9px;margin:0 0 10px;
+}
+
+/* ---------- items ---------- */
+.item{
+  display:block;
+  border-top:1px solid var(--line);
+}
+.item.checkable{
+  display:grid;grid-template-columns:34px 1fr;align-items:start;
+}
+.item:last-child{border-bottom:1px solid var(--line);}
+.item .box{margin:17px 0 0;justify-self:start;}
+.item input[type=checkbox]{
+  width:20px;height:20px;accent-color:var(--cardinal);cursor:pointer;margin:0;
+}
+details{min-width:0;}
+summary{
+  list-style:none;cursor:pointer;padding:14px 0;
+  display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;
+}
+summary::-webkit-details-marker{display:none;}
+summary:hover .ttl{color:var(--cardinal);}
+.ttl{font-size:16.5px;font-weight:600;color:var(--black);}
+.item.done .ttl{color:var(--coolgrey);text-decoration:line-through;}
+.chev{
+  margin-left:auto;flex:none;width:14px;height:14px;
+  color:var(--coolgrey);transition:transform .15s ease;
+}
+details[open] .chev{transform:rotate(180deg);}
+.badge{
+  font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--white);padding:3px 8px;white-space:nowrap;flex:none;
+}
+.b-deadline{background:var(--plum);}
+.b-required{background:var(--cardinal);}
+.b-early{background:var(--paloalto);}
+.b-money{background:var(--archway);}
+
+.body{padding:0 0 20px;max-width:68ch;}
+.body p{margin:0 0 12px;}
+.body ul{margin:0 0 12px;padding-left:20px;}
+.body li{margin-bottom:6px;}
+.body li::marker{color:var(--cardinal);}
+.body strong{font-weight:700;}
+.body .how{
+  background:var(--line-soft);padding:14px 16px;margin:0 0 14px;
+}
+.body .how h4{
+  font-family:var(--sans);font-size:11.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--black);margin:0 0 8px;
+}
+.body .how ol{margin:0;padding-left:20px;}
+.body .how p:last-child,.body .how ol:last-child{margin-bottom:0;}
+.body .watch{
+  border-left:4px solid var(--cardinal);padding:2px 0 2px 14px;margin:0 0 14px;
+}
+.body .watch strong{color:var(--cardinal);}
+.meta{
+  font-size:13.5px;color:var(--coolgrey);margin:14px 0 0;
+  padding-top:10px;border-top:1px solid var(--line);
+}
+.meta span{display:inline-block;margin-right:16px;}
+
+/* ---------- progress tracker (opt-in view only) ---------- */
+.tracker{background:var(--line-soft);padding:18px;margin:26px 0 0;}
+.tracker h2{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2.4vw,25px);margin:0 0 6px;}
+.tracker p{font-size:14.5px;color:var(--black);margin:0 0 14px;max-width:64ch;}
+.tracker .bar{height:10px;background:var(--white);margin:0 0 8px;max-width:420px;}
+.tracker .bar span{display:block;height:100%;background:var(--cardinal);}
+.tracker .tally{font-size:14.5px;font-weight:700;margin:0 0 14px;}
+.tracker button{
+  font-family:var(--sans);font-size:13.5px;font-weight:600;
+  background:var(--black);color:var(--white);border:none;padding:9px 14px;cursor:pointer;
+}
+.tracker button:hover{background:var(--cardinal-dark);}
+.optional{
+  font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--coolgrey);border:1px solid var(--line);padding:2px 7px;white-space:nowrap;flex:none;
+}
+
+/* ---------- numbers ---------- */
+.numbers{margin:44px 0 0;}
+.numbers h2{
+  font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.6vw,28px);
+  margin:0 0 4px;
+}
+.numbers p.gsub{font-size:14.5px;color:var(--coolgrey);margin:0 0 16px;}
+.numbers dl{
+  margin:0;display:grid;gap:0;
+  grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
+}
+.numbers div.n{
+  border-top:2px solid var(--black);padding:12px 16px 16px 0;
+}
+.numbers dt{
+  font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1;
+  color:var(--cardinal);margin:0 0 4px;
+}
+.numbers dd{margin:0;font-size:14.5px;color:var(--black);}
+
+/* ---------- contacts ---------- */
+.contacts{margin:46px 0 0;}
+.contacts h2{
+  font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.6vw,28px);
+  margin:0 0 4px;
+}
+.contacts p.gsub{font-size:14.5px;color:var(--coolgrey);margin:0 0 16px;max-width:62ch;}
+.cgrid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));}
+.card{background:var(--line-soft);padding:18px;}
+.card.primary{background:var(--cardinal);color:var(--white);}
+.card h3{
+  font-family:var(--sans);font-size:15px;font-weight:700;margin:0 0 8px;
+}
+.card.primary h3{color:var(--white);}
+.card p{font-size:14px;margin:0 0 10px;}
+.card ul{margin:0;padding-left:18px;font-size:14px;}
+.card li{margin-bottom:4px;}
+.card a{color:var(--cardinal);font-weight:600;word-break:break-word;}
+.card.primary a{color:var(--white);}
+.card .addr{font-weight:700;font-size:14.5px;word-break:break-word;}
+
+.urgent{
+  margin:16px 0 0;border-top:2px solid var(--black);padding:14px 0 0;
+}
+.urgent h3{font-family:var(--sans);font-size:14px;font-weight:700;margin:0 0 8px;}
+.urgent ul{margin:0;padding-left:18px;font-size:14.5px;}
+.urgent li{margin-bottom:5px;}
+
+/* ---------- footer ---------- */
+footer{
+  margin:50px 0 0;border-top:1px solid var(--line);
+  padding:20px 0 48px;font-size:13.5px;color:var(--coolgrey);
+}
+footer p{margin:0 0 8px;max-width:70ch;}
+
+.empty{
+  padding:34px 0;font-size:16px;color:var(--coolgrey);
+  border-top:1px solid var(--line);
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;}
+  html{scroll-behavior:auto;}
+}
+@media print{
+  .identity,.searchbar,.quick,.views,.count,.item .box,.chev{display:none !important;}
+  .body{display:block !important;}
+  body{font-size:11pt;}
+  .item{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="identity"><span class="logo-slot">[Insert official Stanford logo here]</span></div>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Continuing Studies</p>
+    <h1>Instructor Handbook</h1>
+    <p class="lede">Everything in the 30-page handbook, reorganized so you can find one answer fast. Search it, walk the quarter in order, or browse by topic.</p>
+    <p class="updated">Source: Instructor Handbook, updated July 29, 2026. When this page and the official handbook disagree, the handbook governs.</p>
+
+    <div class="searchbar">
+      <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="#53565A" stroke-width="2.2" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>
+      </svg>
+      <label for="q" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Search the handbook</label>
+      <input id="q" type="search" autocomplete="off" placeholder="Search: reimbursement, guest speaker, grades, Zoom&hellip;">
+      <span class="hint" id="slashHint">Press /</span>
+      <button type="button" class="clear" id="clearBtn" hidden>Clear</button>
+    </div>
+    <p class="count" id="count" role="status" aria-live="polite"></p>
+
+    <nav class="quick" aria-label="Common questions">
+      <h2>Jump to a common question</h2>
+      <ul id="quickList"></ul>
+    </nav>
+  </header>
+
+  <div class="views" role="tablist" aria-label="How to browse">
+    <button type="button" role="tab" id="tab-when" aria-selected="true" aria-controls="content">By when it happens</button>
+    <button type="button" role="tab" id="tab-topic" aria-selected="false" aria-controls="content">By topic</button>
+    <button type="button" role="tab" id="tab-check" aria-selected="false" aria-controls="content">Did I miss anything?</button>
+  </div>
+
+  <main id="content" role="tabpanel" aria-labelledby="tab-when"></main>
+
+  <section class="numbers" aria-labelledby="numbers-h">
+    <h2 id="numbers-h">Numbers worth memorizing</h2>
+    <p class="gsub">The limits and deadlines that cause the most email.</p>
+    <dl id="numbersList"></dl>
+  </section>
+
+  <section class="contacts" aria-labelledby="contacts-h">
+    <h2 id="contacts-h">Who to email</h2>
+    <p class="gsub">Sending a question to the wrong inbox is the most common reason an answer takes days instead of hours.</p>
+    <div class="cgrid" id="contactGrid"></div>
+    <div class="urgent">
+      <h3>On campus, right now</h3>
+      <ul>
+        <li><strong>Locked out of your classroom</strong> or another facility emergency: Land, Building and Real Estate, 650-723-2281.</li>
+        <li><strong>Non-emergency security concern:</strong> Stanford Dispatcher, 650-329-2413, 24 hours a day.</li>
+        <li><strong>Emergency:</strong> 911. From a University phone, dial 9-911.</li>
+        <li><strong>Classroom technology trouble mid-class:</strong> post in the Slack channel <strong>help-csp-instructors</strong>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <p>This page is a navigation aid built from the Instructor Handbook. It condenses and reorders the handbook's content and does not replace it, your teaching contract, or University policy. Policies change; confirm anything consequential with Continuing Studies.</p>
+    <p>The checklist under "Did I miss anything?" is optional and saved in this browser only. It is not submitted anywhere, not visible to anyone else, and clearing your browser data will remove it.</p>
+  </footer>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   Content transcribed from the Stanford Continuing Studies Instructor
+   Handbook, updated July 29, 2026. "pg" is the handbook's own printed
+   page number so anything here can be checked against the source.
+   ------------------------------------------------------------------ */
+
+const PHASES = [
+  {k:"p1", label:"Course confirmed",  color:"var(--plum)",     h:"As soon as your course is confirmed",
+   sub:"The requests with long lead times. Everything here gets harder or impossible if you wait."},
+  {k:"p2", label:"~2 months out",     color:"var(--cardinal)", h:"About two months out",
+   sub:"Forms that must be in before registration opens, because students shop for courses using what you submit."},
+  {k:"p3", label:"Week before",       color:"var(--paloalto)", h:"The week before your first class",
+   sub:"Setup and preparation. Short tasks, but several of them."},
+  {k:"p4", label:"First class",       color:"var(--skydark)",  h:"Your first class session",
+   sub:"How to start the meeting correctly and what to do in the first few minutes."},
+  {k:"p5", label:"During",            color:"var(--lagunita)", h:"During the quarter",
+   sub:"The situations that come up mid-course, and the policies behind them."},
+  {k:"p6", label:"Wrap-up",           color:"var(--brick)",    h:"Your last class and after",
+   sub:"Evaluations, grades, and the benefit you earn by teaching."},
+  {k:"p7", label:"Employment",        color:"var(--archway)",  h:"Employment and pay, any time",
+   sub:"How you get paid, what you must complete, and where you may work."}
+];
+
+const TOPICS = [
+  {k:"t-setup",    h:"Getting set up",              sub:"Accounts, forms, and approvals before you teach."},
+  {k:"t-tech",     h:"Technology",                  sub:"Canvas, Zoom, Panopto, Slack, and what to do when they break."},
+  {k:"t-campus",   h:"Classroom and campus",        sub:"Rooms, A/V, wifi, and campus access."},
+  {k:"t-materials",h:"Course materials and money",  sub:"Textbooks, copies, reimbursements, copyright."},
+  {k:"t-students", h:"Students and conduct",        sub:"Enrollment, communication, behavior, accommodations."},
+  {k:"t-grading",  h:"Grading and credit",          sub:"Grade options, assignments, deadlines, transcripts."},
+  {k:"t-pay",      h:"Employment and pay",          sub:"Hiring, payroll, taxes, work location, training."},
+  {k:"t-policy",   h:"Policies, titles and privacy",sub:"What you may and may not say, share, or claim."}
+];
+
+const ENTRIES = [
+
+/* ================= p1: course confirmed ================= */
+{id:"css", ph:"p1", tp:"t-setup", pg:"11-12", b:["early"],
+ t:"Ask for a Course Support Specialist, if you need one",
+ body:`<p>Most instructors run every part of their own course. A <strong>Course Support Specialist</strong> (CSS, formerly called a course assistant) is for the rare case of a large class or a course with complex, interactive activities. Requests are reviewed case by case, and approval one quarter does not carry to the next.</p>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>Email Continuing Studies as soon as your course is confirmed.</li>
+ <li>List the tasks the CSS would do and an estimated hours per week.</li>
+ <li>If approved, <strong>you recruit the person</strong>. The program hires them.</li></ol></div>
+ <p><strong>A CSS may:</strong> post and organize Canvas materials, monitor discussions, manage class technology (chat, raised hands, mute, breakout rooms), assist with demonstrations, track attendance, and hold office hours to answer questions and review homework.</p>
+ <p><strong>A CSS may not</strong> lecture, introduce new content, or grade student work. They can expand on your material during office hours and give feedback using a rubric you provide. If you want help lecturing or grading, that is a co-instructor, not a CSS.</p>
+ <div class="watch"><p><strong>Watch out:</strong> University policy prohibits volunteers in classes, so a CSS must be hired and is subject to the same employment rules you are. Onboarding a non-Stanford person takes 1 to 4 weeks or more, including a background check.</p></div>
+ <p>Typical allocations: about 5 hours a week for an online course, plus 2 hours of Canvas and Zoom training and 2 hours of pairing and prep if the CSS is new. For on-campus courses, hours usually match total classroom hours.</p>`},
+
+{id:"room", ph:"p1", tp:"t-campus", pg:"3-4", b:["early"],
+ t:"Request your classroom",
+ body:`<p>Most courses meet in or around the Main Quad. Submit the <strong>Room Request</strong> form in the Instructor Portal, under "Submit Courses Preferences &amp; Forms." Late requests usually cannot be accommodated.</p>
+ <div class="watch"><p><strong>Watch out:</strong> once assigned, a room cannot be changed unless enrollment exceeds its capacity. Describe your needs accurately the first time.</p></div>
+ <p><strong>The five room types:</strong></p>
+ <ul>
+ <li><strong>Lecture</strong> (30 to 300): fixed tiered seating in rows facing you. Mostly for non-limited courses.</li>
+ <li><strong>Seminar</strong> (up to 24): seating around an oval or shared table for discussion.</li>
+ <li><strong>Flex Chair</strong> (24 to 40): movable chairs with personal writing surfaces on casters, reconfigurable for lecture, think-pair-share, or group work.</li>
+ <li><strong>Case Study</strong> (30 to 68): tiered rows of front-facing tables with moveable seating, for instructor-led discussion.</li>
+ <li><strong>Small Group</strong> (24 to 280, limited availability): tables grouped for about four students each, swivel chairs, often with a personal dry erase board per student.</li>
+ </ul>
+ <p>A separate visual guide with photos and descriptions of each room type is available from the program.</p>`},
+
+{id:"cap", ph:"p1", tp:"t-students", pg:"9", b:["early"],
+ t:"Ask for an enrollment cap, if your course needs one",
+ body:`<p>Email Continuing Studies as soon as possible. Limits should be settled during scheduling, not after.</p>
+ <p>Caps are typically reserved for practice courses such as art studio and creative writing. Exceptions are possible for a highly interactive course. Caps are discouraged for lecture-based courses.</p>`},
+
+{id:"training", ph:"p1", tp:"t-pay", pg:"20", b:["required","deadline"],
+ t:"Finish your mandated training within 30 days of hire",
+ body:`<div class="watch"><p><strong>Your teaching assignment is contingent on completing this training.</strong> You have 30 days from your hire date.</p></div>
+ <p>All of it runs through Stanford's online training tool, <strong>STARS</strong>. You will be emailed access instructions if you have not yet met the requirement. This training is compensable through your regular course salary.</p>
+ <ul>
+ <li><strong>Sexual harassment prevention:</strong> required every two years by California SB-1343, for all non-supervisory employees.</li>
+ <li><strong>Workplace violence prevention:</strong> required every year by California SB-553, effective July 1, 2024. About 30 minutes.</li>
+ <li><strong>General Safety, Injury Prevention (IIPP), and Emergency Preparedness</strong>, plus the <strong>Administrative Guide Acknowledgement</strong>: required by University Human Resources.</li>
+ </ul>`},
+
+{id:"hiring", ph:"p1", tp:"t-pay", pg:"24", b:["required"],
+ t:"Clear the background check and Form I-9",
+ body:`<p>All CSP instructors are hired as University employees and paid through University Payroll. Invoicing as a vendor is not permitted.</p>
+ <ul>
+ <li><strong>New hires:</strong> a complete employment application and a passed background check before you start. Stanford uses HireRight; shortly after you sign your offer letter you will be asked to submit confidential information to a secure portal.</li>
+ <li><strong>Rehires after a break of 366 days or more:</strong> only a new basic background check.</li>
+ <li><strong>Form I-9:</strong> after the background check clears, the program coordinates collecting your original documents establishing eligibility to work in the U.S.</li>
+ </ul>
+ <p>If you are a <strong>current full-time Stanford employee</strong>, the University's additional pay policy applies. CSP must notify and get approval from your department's HR manager and your supervisor before the quarter you teach. Tell your supervisor and HR manager yourself as well.</p>`},
+
+/* ================= p2: two months out ================= */
+{id:"textbooks", ph:"p2", tp:"t-materials", pg:"5", b:["deadline"],
+ t:"Submit your textbook order",
+ body:`<p>Staff order all textbooks through the Stanford Bookstore. Use the <strong>Textbook Order</strong> form in the Instructor Portal. If you are not using textbooks, click the "no textbooks are needed" button rather than skipping the form.</p>
+ <div class="watch"><p><strong>Why the deadline is real:</strong> University policy requires text information to be posted before registration opens. Your submission feeds your public course description, the student confirmation letters, and bookstore stock.</p></div>
+ <p><strong>Two guidelines worth following:</strong></p>
+ <ul>
+ <li>If required texts total more than <strong>$80</strong>, consider making some optional.</li>
+ <li>Students can generally handle up to <strong>75 pages of nonfiction</strong> or <strong>100 to 125 pages of fiction</strong> per week. Adjust for difficulty.</li>
+ </ul>`},
+
+{id:"syllabus", ph:"p2", tp:"t-setup", pg:"5-6", b:["required","deadline"],
+ t:"Submit your preliminary syllabus",
+ body:`<p>Stanford requires a preliminary syllabus from every instructor before registration opens. You will submit it through a Google Form; the link is emailed to you roughly two months before the quarter.</p>
+ <div class="watch"><p><strong>It is public.</strong> Anyone browsing the course listings can read it, so do not put your personal contact information on it.</p></div>
+ <p>Post your <strong>final</strong> syllabus in Canvas before your course start date. If a letter grade or credit requires specific work, say so in the syllabus so expectations are set at the start of the term.</p>`},
+
+{id:"firstassign", ph:"p2", tp:"t-setup", pg:"5",
+ t:"Decide whether to set a first assignment",
+ body:`<p>Optional. If you want students to do something before the first meeting, put it in your preliminary syllabus and staff will also load it into the system, so students receive it when they register.</p>
+ <p>You can ask them to read or watch something. Some instructors link a short survey to gauge expectations and prior expertise before the course starts.</p>`},
+
+{id:"zoomacct", ph:"p2", tp:"t-tech", pg:"6-7", b:["required"],
+ t:"Set up your CSP Zoom account",
+ body:`<p>Continuing Studies provides a paid, licensed Zoom account for the duration of your course, and configures your course meeting with the settings that work best as an online classroom.</p>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>Before the quarter, staff will ask you for an email address.</li>
+ <li>It must be an address <strong>not already associated with any Zoom account</strong>, including your Stanford SUNet Zoom account and any personal or work account.</li>
+ <li>If you do not have a spare, create one. Many instructors make a free Gmail address just for this.</li>
+ </ol></div>
+ <p><strong>You cannot use your own Zoom account.</strong> A CSP account is required so staff can support you and your students during a class meeting, and it saves you configuring settings yourself.</p>
+ <p>CSP communications still go to the address in your instructor profile, not the Zoom address.</p>`},
+
+{id:"panoptoset", ph:"p2", tp:"t-tech", pg:"7",
+ t:"Set up Panopto recording capture, if your course is recorded",
+ body:`<p>Panopto transfers, publishes, and stores your Zoom recordings in Canvas, uploading automatically for student viewing. There is no separate login for you.</p>
+ <p>New instructors can book a one-on-one appointment with staff to set up the CSP Zoom account, configure Panopto capture for recorded courses, and get Zoom training shaped around the course. On-demand training videos are in the Instructor Resources Library.</p>`},
+
+{id:"slack", ph:"p2", tp:"t-tech", pg:"8-9", b:["required"],
+ t:"Join the instructor Slack workspace",
+ body:`<p>Slack is how you reach staff quickly, including while class is in session. Support hours are posted in the workspace each Monday, and the channel <strong>help-csp-instructors</strong> is monitored during them.</p>
+ <div class="how"><h4>If you are new to Stanford Slack</h4><ol>
+ <li>Go to <strong>stanford-csp-inst.slack.com</strong>.</li>
+ <li>Click <strong>Sign in with Stanford</strong>.</li>
+ <li>Log in with your SUNet ID.</li>
+ <li>If you do not land in the Continuing Studies Instructor workspace, search the Stanford Slack grid for "Continuing Studies Instructor" and request to join.</li>
+ </ol></div>
+ <div class="how"><h4>If you already use Stanford Slack</h4><ol>
+ <li>Click the small arrow next to your current workspace name.</li>
+ <li>Choose <strong>Add workspaces</strong>, then <strong>Find more Stanford University workspaces</strong>.</li>
+ <li>Search "Continuing Studies Instructor" and request to join.</li>
+ </ol></div>`},
+
+/* ================= p3: week before ================= */
+{id:"visitroom", ph:"p3", tp:"t-campus", pg:"5", b:["early"],
+ t:"Visit your classroom before the first session",
+ body:`<p>Find your room under <strong>Class List &amp; Location</strong> in the Instructor Portal. The Learning, Design, and Technology team emails you once rooms are assigned.</p>
+ <div class="watch"><p><strong>You cannot drop in.</strong> Visits require an appointment, because rooms take 24 to 48 hours to reserve. Email Continuing Studies to schedule, and do it early. Availability is hard to find.</p></div>`},
+
+{id:"canvasprep", ph:"p3", tp:"t-tech", pg:"6",
+ t:"Set up your Canvas page",
+ body:`<p>Every class gets a Canvas page. For <strong>online</strong> courses it is where students get the Zoom connection information, so post your syllabus and a welcome announcement at minimum. For <strong>on-campus</strong> courses Canvas is optional, though many instructors post the syllabus, handouts, and slides.</p>
+ <p><strong>What Canvas does for you:</strong></p>
+ <ul>
+ <li>Post readings, assignments, links, and resources. Readings must be electronic: PDF is recommended, or Word, PowerPoint, or links to publicly available articles.</li>
+ <li>Use <strong>Assignments</strong> to post work, collect submissions, and give feedback.</li>
+ <li>Use <strong>Announcements</strong>, not email, for anything going to the whole class.</li>
+ </ul>`},
+
+{id:"welcome", ph:"p3", tp:"t-students", pg:"14",
+ t:"Send a welcome announcement",
+ body:`<p>Send students a welcome message before the course starts, through Canvas <strong>Announcements</strong>. Students receive announcements by email and can also read them in Canvas. Weekly announcements through the quarter are recommended.</p>
+ <p>Good things to cover: any first assignment, and the level of expertise expected. Say plainly whether the course assumes no experience or some background.</p>
+ <div class="watch"><p><strong>Timing trap:</strong> you can only send an announcement once your course is published and students have access. If you write one earlier, set a <strong>Delay Posting</strong> date after the publication date.</p></div>`},
+
+{id:"roster", ph:"p3", tp:"t-students", pg:"8",
+ t:"Download an updated roster",
+ body:`<p>Pull a fresh class roster from the Instructor Portal before the first session, and again whenever you need it. Students can change their grade option up to the last class session, so an old roster will be wrong by the end.</p>`},
+
+{id:"techreq", ph:"p3", tp:"t-tech", pg:"3", b:["required"],
+ t:"Check your computer meets the requirements",
+ body:`<p>To teach online you need all of the following already in place:</p>
+ <ul>
+ <li><strong>Operating system:</strong> Windows 10 or newer, or macOS High Sierra (10.13) or newer.</li>
+ <li><strong>Processor and memory:</strong> 2GHz and 4GB RAM minimum; quad-core 2.5GHz and 16GB RAM recommended.</li>
+ <li><strong>Browser:</strong> the newest Chrome or Firefox. <strong>Safari is not recommended for Canvas or Panopto.</strong></li>
+ <li><strong>Internet:</strong> at least 5Mbps download and 5Mbps upload. Higher upload is better for breakout rooms and sharing interactive screens. Test at Fast.com.</li>
+ </ul>
+ <p>None of the equipment below is required. It is what the program recommends if your built-in hardware is not good enough, and it is <strong>reimbursable against your $100 materials budget</strong>.</p>
+ <div class="how"><h4>Recommended and reimbursable</h4>
+ <ul>
+ <li><strong>Microphones and headsets.</strong> Wired beats Bluetooth for reliability every time. Blue Snowball iCE, Blue Yeti Nano, Blue Yeti, Plantronics Blackwire 3220, Logitech H390.</li>
+ <li><strong>Webcams.</strong> Look for 1080p and 30fps. Logitech C920x HD Pro, or the Logitech Brio 301, which has a privacy shutter.</li>
+ <li><strong>Lighting.</strong> Look for adjustable position, intensity, and color temperature. InnoGear ring light, or a conference ring light.</li>
+ <li><strong>Cables.</strong> Bring your own power and video cables, because classrooms may not have what you need. An Amazon Basics 6-ft HDMI cable and, for newer Apple machines, an Anker USB-C to HDMI adapter.</li>
+ </ul></div>
+ <p>Email Continuing Studies before buying if you are unsure something qualifies.</p>`},
+
+{id:"av", ph:"p3", tp:"t-campus", pg:"4",
+ t:"Know your classroom A/V before you walk in",
+ body:`<p>Every assigned classroom has a <strong>SmartPanel</strong>: an all-in-one unit controlling power, volume, and three media sources.</p>
+ <ul>
+ <li>An external computer over HDMI/USB</li>
+ <li>A mounted Blu-Ray player</li>
+ <li>Apple AirPlay</li>
+ </ul>
+ <p>It looks like a compact black rectangular wall panel beside a wall-mounted touchscreen tablet that controls it. Built-in HDMI and USB-A cables come attached to a USB-C adapter, so it works with Mac and PC, and a Blu-Ray player is integrated.</p>
+ <div class="watch"><p><strong>Bring your own HDMI cable and adapter anyway.</strong> The rooms are equipped, but this is the failure that costs you the first ten minutes of class.</p></div>
+ <p>Need additional A/V items or materials? Email Continuing Studies well before the quarter starts.</p>`},
+
+{id:"wifi", ph:"p3", tp:"t-campus", pg:"4",
+ t:"Know how students get on wifi",
+ body:`<p>Stanford has an open campus network with no username or password. Open a browser, and if asked to pick a network choose <strong>Stanford Visitor</strong>, not "Stanford."</p>
+ <ul>
+ <li>Sessions are limited to 12 hours.</li>
+ <li>A connection idle for four hours is dropped and must reconnect.</li>
+ <li>Maximum download speed is 1.5 Mbps.</li>
+ <li>Access is limited to web browsing, email, SSH, and VPN.</li>
+ <li>SMTP on port 25 is blocked. Mail clients must use SSL on port 465 or 587.</li>
+ </ul>
+ <p>Point students asking about wifi to the Continuing Studies wifi access policy page rather than troubleshooting it yourself.</p>`},
+
+/* ================= p4: first class ================= */
+{id:"startmeeting", ph:"p4", tp:"t-tech", pg:"8", b:["required"],
+ t:"Start your class meeting the right way",
+ body:`<div class="how"><h4>Preferred: start from Canvas</h4><ol>
+ <li>Log in to your Canvas course.</li>
+ <li>Click the <strong>CSP Zoom</strong> tab in the left sidebar.</li>
+ <li>Select <strong>Start meeting</strong>.</li>
+ </ol></div>
+ <div class="how"><h4>Alternate: start from the Zoom app</h4><ol>
+ <li>Open Zoom and click <strong>Meetings</strong> at the top.</li>
+ <li>Select the meeting titled with the quarter and your course code, for example "Fall 2022: BUS 101," then click <strong>Start</strong>.</li>
+ <li>Open the <strong>Participants</strong> tab and confirm you are listed as <strong>Host</strong>.</li>
+ </ol></div>
+ <div class="watch"><p><strong>Do not</strong> click the orange <strong>New Meeting</strong> button or the blue <strong>Join</strong> button on the Zoom home screen. Those create or join the wrong meeting, and your students will be sitting in the scheduled one without you.</p></div>
+ <p>Log in at least five minutes early. Keep email open in case a student writes about connection trouble, and keep Slack open in case you need staff.</p>`},
+
+{id:"firstminutes", ph:"p4", tp:"t-students", pg:"8",
+ t:"Spend the first few minutes on orientation",
+ body:`<p>Plan to open the first session with a short walkthrough: an overview of Zoom, your expectations and etiquette for the class, and how to navigate the Canvas page. It takes a few minutes and prevents weeks of individual questions.</p>`},
+
+{id:"attendance", ph:"p4", tp:"t-students", pg:"14", b:["required"],
+ t:"Take attendance, and admit only registered students",
+ body:`<p>Limit your class to registered students. Taking attendance on the first night is encouraged where feasible. On Zoom, screenshot the Participants list or download the Attendee Report and compare it to your roster.</p>
+ <div class="watch"><p><strong>No auditing is allowed.</strong> Only students who have paid tuition and fees in full may attend. An unregistered person takes a paying student's seat, or jumps ahead of people waiting on the wait list.</p></div>
+ <p>If someone asks you directly about joining a full course, send them to Continuing Studies rather than deciding yourself. There may already be several people on the wait list, and staff contact them in order.</p>`},
+
+{id:"techfail", ph:"p4", tp:"t-tech", pg:"8",
+ t:"When the technology fails mid-class",
+ body:`<p>Do not panic, and do not assume it is you. It is normal for you or a student to need two or three attempts to connect.</p>
+ <div class="how"><h4>Audio or video problems, in order</h4><ol>
+ <li>Click the small arrow next to the microphone or camera icon and confirm the correct device is selected.</li>
+ <li>Leave the meeting and come back.</li>
+ <li>Shut down and restart the computer.</li>
+ </ol></div>
+ <p><strong>If you need a human:</strong> message the Slack channel <strong>help-csp-instructors</strong> or email Continuing Studies. Staff monitor both.</p>
+ <p><strong>Students</strong> needing help should email Continuing Studies directly. Staff monitor student email too, so you do not have to be the help desk.</p>`},
+
+/* ================= p5: during the quarter ================= */
+{id:"recording", ph:"p5", tp:"t-tech", pg:"7",
+ t:"How recording works, and how to opt out",
+ body:`<p>Most instructors record their Zoom class meetings. Recordings post to Canvas automatically <strong>within 24 hours</strong>. Students value them for missed sessions and for review.</p>
+ <ul>
+ <li>Students <strong>cannot download</strong> recordings.</li>
+ <li>Instructors <strong>should not share</strong> downloaded video files.</li>
+ <li>Zoom training covers how to <strong>pause</strong> recording during a session.</li>
+ </ul>
+ <p>If you want to opt out of recording all or part of your course, raise it with the course preparation team while your Zoom account and meeting schedule are being set up.</p>`},
+
+{id:"bots", ph:"p5", tp:"t-policy", pg:"7-8", b:["required"],
+ t:"AI note-taking bots are not welcome in your class",
+ body:`<p>Third-party AI note-takers can join a meeting and monitor, summarize, transcribe, record, capture images, scrape calendar data, store recordings in undisclosed locations, and even attend when the person who invited them is absent.</p>
+ <p>In a Continuing Studies course that is a real problem. Without consent for data collection and contractual limits on data use, these tools may violate <strong>FERPA</strong>, expose personally identifiable information of hosts and attendees, and undermine the confidentiality that makes class discussion possible.</p>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>If a bot attempts or succeeds in entering your class meeting, notify the Continuing Studies team.</li>
+ <li>Staff work with Zoom to block future logins.</li>
+ </ol></div>
+ <p>CSP is working with Zoom to block note-taking bots at the domain level, mirroring the University's approach. Resources on identifying and removing a bot, and the policy documentation for students, are linked from the handbook.</p>`},
+
+{id:"officehours", ph:"p5", tp:"t-students", pg:"14",
+ t:"Office hours are not required",
+ body:`<p>You are not required to hold office hours. Instead, announce when you are reachable: just before class, during the break, right after class, or by email or phone. Repeat it through the quarter.</p>`},
+
+{id:"behavior", ph:"p5", tp:"t-students", pg:"18-19", b:["required"],
+ t:"Handle a disruptive or upsetting student",
+ body:`<p>Behavioral issues are rare. They generally fall into two kinds: <strong>how</strong> a student is acting, such as monopolizing discussion, causing a disruption, or appearing intoxicated; and <strong>what</strong> a student is saying, live or in discussion posts, including remarks perceived as racist or sexist.</p>
+ <div class="watch"><p><strong>Never delete a student's discussion post in Canvas.</strong> It could be considered censorship, and the post is the documentation you will need if the situation escalates. Do not delete evidence of disruptive behavior generally.</p></div>
+ <div class="how"><h4>Step 1: reach out yourself</h4>
+ <p>The first message a student receives should come from you, because you observed the behavior. For a minor issue, use whatever channel feels right: email, phone, Zoom, or in person.</p>
+ <ul>
+ <li><strong>Tone matters.</strong> You can be friendly and firm at once. Start with something you appreciate about them or their work, then move to the behavior.</li>
+ <li><strong>Be specific about what you expect.</strong> For example: "In Zoom, I expect all students to use the Raise Hand feature and wait to be called on in order to create a respectful environment." Specific instructions also document what you told them.</li>
+ <li><strong>Close on something constructive:</strong> a positive observation, or how the adjustment will make the class better for everyone.</li>
+ <li><strong>If you spoke live, follow up in email</strong> summarizing the conversation.</li>
+ </ul></div>
+ <div class="how"><h4>Step 2: document and consult</h4>
+ <p>If it continues, document your concerns and email <strong>Amy Tollafield</strong>, Student Services Manager, at tollafie@stanford.edu. Describe the behavior and include any written exchanges. Professional staff will consult with you and may contact the student directly.</p></div>
+ <div class="how"><h4>Step 3: escalation</h4>
+ <p>Keep documenting and keep Amy informed. Rarely, these situations require consultation with other University offices, such as the Office of the General Counsel, and a student may need to be removed from the course. At that point professional staff handle the administrative action so you can focus on teaching.</p></div>
+ <p><strong>On speech specifically:</strong> California's Leonard Law applies to universities, and Stanford's "Freedom of Speech &amp; the Fundamental Standard" guidance is the reference. Speech may not be disciplined unless it meets a legal standard of being unprotected, such as sexual harassment, race-based harassment, obscenity, fighting words, incitement of imminent lawless action, true threat, or defamation. Those thresholds are not easily met, and even abhorrent speech is generally protected. Consult rather than acting alone.</p>`},
+
+{id:"conduct", ph:"p5", tp:"t-students", pg:"17",
+ t:"What the Student Code of Conduct actually covers",
+ body:`<p>Students check a box confirming they understand the Code of Conduct when they register, and are also bound by University rules including the <strong>Fundamental Standard</strong>. Behavior that will not be tolerated, and may result in removal from the program and campus and forfeiture of tuition and fees, includes:</p>
+ <ul>
+ <li>Disrupting teaching, learning, or the free flow of ideas in the classroom</li>
+ <li>Disorderly conduct or disturbing the peace</li>
+ <li>Dishonesty or misrepresenting oneself, in class or in correspondence</li>
+ <li>Refusing to follow Continuing Studies or University policies</li>
+ <li>Refusing to comply with your stated course requirements</li>
+ <li>Physical abuse</li>
+ <li>Intimidation, harassment, or threatening behavior toward anyone</li>
+ <li>Attending classes or paid events without registering, or misusing University resources</li>
+ <li>Sexual misconduct of any kind</li>
+ </ul>
+ <p>Email Continuing Studies immediately if you see any of this or have another concern. Staff can discuss strategies and consult other Stanford offices.</p>`},
+
+{id:"schedchange", ph:"p5", tp:"t-setup", pg:"13-14", b:["required"],
+ t:"Cancel or reschedule a class session",
+ body:`<div class="how"><h4>What to do</h4><ol>
+ <li>Email Continuing Studies as soon as possible so staff can notify students in time.</li>
+ <li>Staff work with you on a make-up session and contact your students about the change.</li>
+ <li>Once the plan is final, you are welcome to message students with any extra detail.</li>
+ </ol></div>
+ <div class="watch"><p><strong>All schedule changes must come through the office</strong>, including a change of Zoom day or time. Handling it directly with students yourself, however well intentioned, creates conflicting information.</p></div>
+ <p>If you have tested positive for COVID-19, have symptoms, or have been in close contact with someone who tested positive, follow the University's Symptoms &amp; Exposure guidance from Environmental Health &amp; Safety. Faculty, staff, and postdocs who test positive are required to self-report in HealthCheck. Vaccines and boosters are strongly recommended but no longer required, and masks are not mandatory in classrooms though masking indoors is recommended.</p>`},
+
+{id:"guest", ph:"p5", tp:"t-setup", pg:"13", b:["deadline","money"],
+ t:"Invite a guest speaker",
+ body:`<p>You may invite <strong>up to two guest speakers</strong>, each participating in <strong>one session only</strong>. Choose them so their participation complements your material and contributes to your learning objectives.</p>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>Email Continuing Studies the speaker's <strong>name, email address, and speaking date</strong>.</li>
+ <li>Do this <strong>at least three weeks before</strong> the speaking date so the program can budget and set up payment.</li>
+ </ol></div>
+ <div class="watch"><p><strong>Under three weeks notice, the honorarium cannot be guaranteed.</strong> The program can provide <strong>$150 per speaker</strong>, for up to two speakers.</p></div>
+ <p><strong>Tell staff early if your speaker is a Stanford employee or not a U.S. citizen</strong>, because those cases take longer.</p>
+ <ul>
+ <li><strong>Stanford employees:</strong> eligibility must be confirmed, and honoraria cannot be paid to non-exempt or hourly Stanford employees at all.</li>
+ <li><strong>Joining remotely from outside the U.S.:</strong> Stanford can pay individuals with a valid passport.</li>
+ <li><strong>Joining on campus or online from within the U.S.:</strong> payment is only possible for short-term visitors on a J-1, B-1, or WB (waived business) visa. H-1 visas, and O-1 visas not sponsored by Stanford, cannot be paid.</li>
+ <li><strong>J-1 or F-1 not sponsored by Stanford:</strong> written permission from the sponsor is required in advance of participation or payment.</li>
+ </ul>
+ <p>These are the common scenarios, not a complete list. Ask Continuing Studies about anything unusual.</p>`},
+
+{id:"reimburse", ph:"p5", tp:"t-materials", pg:"10", b:["deadline","money"],
+ t:"Get reimbursed for course expenses",
+ body:`<p>Each course has a materials budget of <strong>$100</strong>.</p>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>Keep a <strong>valid itemized receipt</strong> showing proof of payment, meaning the last four digits of the card used, or "cash." The purchaser on the receipt must match your name.</li>
+ <li>Complete the <strong>Instructor Reimbursement form</strong>.</li>
+ <li>Email both to Continuing Studies. Scans and electronic copies are fine.</li>
+ <li>Submit <strong>no later than 60 days</strong> from the date of the expense. Within 30 days is preferred, to allow processing time.</li>
+ </ol></div>
+ <div class="watch"><p><strong>Late receipts cost you money.</strong> Per federal regulation, a reimbursement requested 60 days or more after the expense was incurred is reported to the IRS as <strong>taxable income</strong>. The deadline is not just administrative tidiness.</p></div>
+ <div class="watch"><p><strong>You must be an active University employee when the reimbursement is processed.</strong> Check the employment dates on your contract, and do not leave a receipt until the end.</p></div>
+ <p>If you do not have direct deposit set up through Stanford, your reimbursement is issued as a paper check. Paper submissions go to Continuing Studies at 365 Lasuen St., Littlefield Center, Stanford, CA 94305.</p>
+ <p><strong>Qualifies:</strong> tangible items that contribute directly to teaching and learning. Photocopied handouts, laser pointers, computer adapters for A/V, books used to prepare and design the curriculum, chalk and dry erase pens, and similar.</p>
+ <p><strong>Does not qualify:</strong> food, beverages, power cords, computers, and internet upgrades.</p>
+ <p><strong>Also not reimbursable:</strong></p>
+ <ul>
+ <li>Purchases through PayPal, Alibaba, or eBay</li>
+ <li>Anything paid with store credit or a gift card. Check that Amazon is not auto-applying a balance to your course purchases.</li>
+ </ul>
+ <p>Reimbursed items are considered Stanford property and can be claimed at any time. Keep requests within $100; reasonable requests above it may be considered if high enrollment requires it. The program reserves the right to decline requests outside this policy.</p>
+ <p>Considering a digital teaching tool? Check with the course preparation team <strong>before purchasing</strong>. Tools must meet security and privacy standards, you may already have access through a University license, and eligibility for reimbursement is not automatic.</p>`},
+
+{id:"copies", ph:"p5", tp:"t-materials", pg:"10-11", b:["money"],
+ t:"Photocopy handouts on the CSP account",
+ body:`<p>Share handouts digitally through Canvas where you can. It aligns with Stanford's sustainability goals and keeps costs down.</p>
+ <p>If your course genuinely cannot work that way, typically a short one or two-day course, you may use CSP's FedEx account. It carries a <strong>20% discount</strong> and bills the program directly, so you do not file a reimbursement. These costs still count against your <strong>$100</strong> materials budget.</p>
+ <div class="how"><h4>Getting the account details</h4>
+ <p>An order needs two numbers, both required: a Stanford account number, and a PO number that routes the charge to Continuing Studies rather than the University generally. The PO number goes in the Additional Billing Information section.</p>
+ <p><strong>Email Continuing Studies for the current numbers</strong> before you place an order. They are not published here.</p></div>
+ <p><strong>Order online rather than walking in.</strong> In-store service varies by location; the website is reliable. Online orders can be picked up at any FedEx location you choose, and free local delivery is sometimes available. If your print costs will exceed the materials allotment, email Continuing Studies first to discuss alternatives.</p>`},
+
+{id:"copyright", ph:"p5", tp:"t-materials", pg:"6", b:["required"],
+ t:"Stay on the right side of copyright",
+ body:`<p><strong>You are responsible</strong> for copyright compliance on anything you post to Canvas. Material must fall within fair use or be in the public domain, unless you have written permission from the publisher.</p>
+ <div class="watch"><p><strong>Continuing Studies cannot help you obtain copyright permissions.</strong> Factor that in while you are still choosing materials, not after.</p></div>
+ <p>Stanford Libraries publishes a Copyright Reminder and Copyright Fair Use guidance; review both as you select course materials.</p>`},
+
+{id:"library", ph:"p5", tp:"t-campus", pg:"9",
+ t:"Use the Stanford libraries",
+ body:`<p>Library access is normally restricted to permanent faculty, staff, and matriculated students. Continuing Studies instructors are an exception: during active CSP employment you have access to online and in-person campus library resources.</p>
+ <p>To visit campus libraries in person you need an active <strong>Stanford ID card</strong>, arranged through the ID Card Office. For privileges, CSP instructors are classified as <strong>Temp/Casual staff</strong>; see the Stanford Libraries Access and Privileges page.</p>`},
+
+{id:"digitaltools", ph:"p5", tp:"t-policy", pg:"21", b:["required"],
+ t:"Using outside apps, social media, and web tools",
+ body:`<p>Collaboration tools can help, but any tool used in teaching must comply with <strong>FERPA</strong>, and they raise questions about web security, content ownership, and confidentiality.</p>
+ <div class="watch"><p><strong>You may not require students to sign up for a Facebook or LinkedIn group, or a Slack or Discord workspace.</strong> Those services require creating an account and accepting terms of use. Host discussions in Canvas instead.</p></div>
+ <p>Any tool that asks users to create an account or submit personal data such as a name or email should be vetted and hosted by Stanford wherever possible. Third-party tools requiring a login are discouraged, but may be acceptable if no comparable Stanford tool exists.</p>
+ <p><strong>Contact Continuing Studies before your class starts</strong> if you want to use a tool or website that requires students to create an account or submit personal data.</p>`},
+
+{id:"ferpa", ph:"p5", tp:"t-policy", pg:"20-21", b:["required"],
+ t:"Protect student privacy",
+ body:`<p>Many students opt out of sharing their email address with anyone, including classmates. Stanford, and therefore Continuing Studies, is bound by <strong>FERPA</strong>, the federal law protecting student record data such as enrollment and grades.</p>
+ <ul>
+ <li>Keep class rosters, student contact information, and grades private.</li>
+ <li>Do not share any of it with anyone outside CSP instructors and staff.</li>
+ <li><strong>Use BCC</strong> when you send a class email.</li>
+ </ul>`},
+
+{id:"contactuse", ph:"p5", tp:"t-policy", pg:"21-22", b:["required"],
+ t:"What you may not use student contact information for",
+ body:`<p>Student contact information provided through Continuing Studies is for <strong>course-related communication only</strong>. You may not use it to solicit students for anything outside Continuing Studies, including:</p>
+ <ul>
+ <li>Courses or programs at other institutions or departments</li>
+ <li>Independent classes, workshops, or training sessions</li>
+ <li>Private coaching, consulting, or other professional services</li>
+ <li>Commercial products or business ventures</li>
+ </ul>
+ <p>You <strong>may</strong> offer students the chance to opt in to a newsletter or news about future learning opportunities, provided the request is:</p>
+ <ul>
+ <li>Completely voluntary, with no pressure or requirement</li>
+ <li>Clearly separate from required course communication</li>
+ <li>Transparent about what they will receive and how their information is used</li>
+ </ul>
+ <p>Absent an explicit opt-in, every message to enrolled students must relate directly to the course they registered for.</p>`},
+
+{id:"coi", ph:"p5", tp:"t-policy", pg:"21", b:["required"],
+ t:"Avoid conflicts of interest and self-promotion",
+ body:`<p>Where you have a financial interest in or employment relationship with a business or product, avoid both actual and apparent conflicts with your University obligations, and avoid any appearance that Stanford endorses a product.</p>
+ <ul>
+ <li>You <strong>cannot require</strong> students to buy a product or tool you have a financial interest in. The exception is a textbook you authored.</li>
+ <li>Do not require or pressure students to sign up for your newsletters, social media groups, or similar.</li>
+ <li>Do not brand your course materials with your business or brand logos.</li>
+ <li>Do not use the Stanford logo on your personal or business website.</li>
+ <li>You <strong>may</strong> mention your service or product, and link to your personal website or social profiles in your Canvas bio, as long as there is no appearance of selling.</li>
+ </ul>`},
+
+{id:"title", ph:"p5", tp:"t-policy", pg:"22", b:["required"],
+ t:"Your official title, and the titles you may not use",
+ body:`<p>Your title is <strong>"Instructor, Stanford Continuing Studies"</strong>. Use it in its entirety, never abbreviated or altered, and only during the assignment period stated in your teaching contract. Use it only in direct relation to your teaching, learning, and research activities at Stanford.</p>
+ <div class="watch"><p><strong>Using an unauthorized title is a direct violation of University policy.</strong> Do not use: Stanford Continuing Studies Lecturer, Professor, or Faculty; Stanford Instructor; Stanford Lecturer, Professor, or Faculty; or Adjunct Lecturer or Professor. Those titles are reserved for formal appointments in the University's degree-granting departments.</p></div>
+ <p>Your title must always include the program affiliation <strong>"Stanford Continuing Studies"</strong> rather than just "Stanford" or "Stanford University." This keeps each program's identity accurate and prevents overly broad claims of affiliation.</p>
+ <p>You can reference where you teach using the Stanford Continuing Studies LinkedIn page. For more, see Administrative Guide 1.5.4 on Ownership and Use of Stanford Trademarks and Images, and the University's Name Use Guidelines.</p>`},
+
+{id:"logo", ph:"p5", tp:"t-policy", pg:"23", b:["required"],
+ t:"When and how you may use the Stanford logo",
+ body:`<p>If you are marketing your course, follow the University branding guidelines in the Media Kit.</p>
+ <p><strong>Do:</strong></p>
+ <ul>
+ <li>Use Stanford Continuing Studies' name and logos consistently for Continuing Studies communications and materials.</li>
+ <li>Use the logo appropriate to your audience.</li>
+ <li>Ask when unsure. Email <strong>Emma Walker</strong> at emma.walker@stanford.edu for questions or permission.</li>
+ </ul>
+ <p><strong>Do not:</strong></p>
+ <ul>
+ <li>Use the name, logos, or campus images of Stanford University.</li>
+ <li>Use the Continuing Studies name or logos on personal projects, or anything not directly for Continuing Studies.</li>
+ <li>Use them to imply a relationship, affiliation, or endorsement of a product, service, or business, even if you are a vendor the program has worked with.</li>
+ <li>Give anyone outside Continuing Studies permission to use them that way, including vendors, donors, and research sponsors.</li>
+ <li>Place the name or logos alongside or as part of another logo.</li>
+ <li>Use them as part of a non-Continuing Studies product, business, or service name or logo.</li>
+ <li>Translate the Stanford Continuing Studies name. It is a proper noun.</li>
+ <li>Alter the logo in any way.</li>
+ </ul>`},
+
+{id:"accommodations", ph:"p5", tp:"t-students", pg:"19", b:["required"],
+ t:"Disability accommodations",
+ body:`<p>The Diversity &amp; Access Office and the Office of Accessible Education help Continuing Studies keep its programs and services accessible.</p>
+ <div class="how"><h4>Where to send it</h4>
+ <ul>
+ <li><strong>A student asks about accessibility or accommodations:</strong> direct them to Stanford's Diversity &amp; Access Office, and see the CSP policy page.</li>
+ <li><strong>You need an accommodation, or have a question about reaching a classroom:</strong> call 650-725-0326 (voice) or 650-723-1216 (TTY), or email disability.access@stanford.edu.</li>
+ </ul></div>`},
+
+{id:"assignments", ph:"p5", tp:"t-grading", pg:"9",
+ t:"Decide what work you will require",
+ body:`<p>Students must submit written work to receive a <strong>letter grade</strong>. For non-lecture courses, comparable work is acceptable: a portfolio, project, or presentation.</p>
+ <p>Students choosing <strong>Credit/No Credit</strong> typically need only attendance and participation, though how much participation is up to you and may include some written work.</p>
+ <p><strong>Typical assignment sizes:</strong> a moderate 6 to 8-page paper for a 2-unit course, 3 to 4 pages for a 1-unit course. Final work should be due within the last week of the quarter. <strong>Exams are discouraged.</strong></p>
+ <p>Read the grading policy before you set requirements, and state the requirement in your syllabus so students understand what earns a letter grade or credit.</p>`},
+
+{id:"waitlist", ph:"p5", tp:"t-students", pg:"16",
+ t:"Wait lists and course cancellations",
+ body:`<p><strong>Wait lists:</strong> Continuing Studies maintains official wait lists for limited enrollment courses, and contacts students in chronological order when space opens. If a student contacts you directly about getting into a full course, redirect them to Continuing Studies. People on the wait list may not attend class unless staff invite them to enroll.</p>
+ <p><strong>Cancellations:</strong> the program markets courses actively, and instructors are strongly encouraged to promote their own courses through their networks. Continuing Studies reserves the right to cancel any course that does not meet its enrollment thresholds, at any time. Enrollments are monitored closely during registration, the decision accounts for real-time financial considerations, and cancellation generally happens with enough time for students to choose another course.</p>
+ <p><strong>Admission</strong> is discretionary and requires a high school diploma or equivalent. CSP students are not matriculated Stanford students, and not all University student privileges apply to them.</p>`},
+
+/* ================= p6: wrap-up ================= */
+{id:"evals", ph:"p6", tp:"t-grading", pg:"27",
+ t:"Push for course evaluation responses",
+ body:`<p>Students receive an evaluation email after your last class meeting. The survey takes 5 to 15 minutes.</p>
+ <div class="how"><h4>How to lift your response rate</h4><ol>
+ <li>Encourage students to complete it at the last class meeting.</li>
+ <li>Send an email reminder a day or two after the course ends.</li>
+ </ol></div>
+ <p>Results are emailed to you 2 to 3 weeks after the course ends. Staff read every evaluation, and student comments factor into whether a course is repeated in a future quarter. Your evaluation score also determines your tuition waiver eligibility.</p>`},
+
+{id:"grades", ph:"p6", tp:"t-grading", pg:"15-16", b:["deadline","required"],
+ t:"Submit final grades",
+ body:`<div class="watch"><p><strong>Within 10 business days of your course end date</strong>, and by the term date listed on your contract. Students cannot obtain transcripts until all their grades are recorded, and transcripts are often needed for tuition reimbursement.</p></div>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>Log in to the Instructor Portal.</li>
+ <li>Click <strong>Grade Entry</strong>.</li>
+ <li>Enter grades. Both <strong>Grade</strong> and <strong>Grade Option</strong> are editable drop-downs, so you can adjust a student's option here if you have agreed to.</li>
+ </ol></div>
+ <p>Use a current roster. Students may change their grade option up to the last class session, in their own online account.</p>
+ <p>After the course ends, honoring a late grade-option change is entirely at your discretion. You are under no obligation to do extra work if a student did not update their record in time or did not complete the requirements during the quarter.</p>`},
+
+{id:"gradeoptions", ph:"p6", tp:"t-grading", pg:"15",
+ t:"What each grade option means",
+ body:`<p>Students choose their grade option at registration. There are normally three.</p>
+ <p><strong>Letter Grade:</strong> requires written work or a gradable assignment. Appropriate paper length is 6 to 8 pages for a ten-week course, 3 to 4 for a five-week course; if a traditional paper does not fit the subject, you may substitute a final project, presentation, or portfolio. Your choices:</p>
+ <ul>
+ <li><strong>A</strong> Excellent · <strong>B</strong> Good · <strong>C</strong> Satisfactory · <strong>D</strong> Minimal Pass, with plus and minus available as modifiers</li>
+ <li><strong>NP</strong> Not Passed</li>
+ <li><strong>I</strong> Incomplete, only for extenuating circumstances such as a medical emergency. Give a firm deadline no more than three weeks past the end of the course, or your contract end date, whichever comes first. After that you must change the grade to A, B, C, D, or NP, or move the student to No Grade Requested.</li>
+ </ul>
+ <p><strong>Credit/No Credit:</strong> the equivalent of pass/fail. Attendance and participation are required, and you set the criteria based on your subject and format. <strong>Requiring at least 80% attendance is recommended.</strong></p>
+ <p><strong>No Grade Requested:</strong> no work required, no credit earned. These students cannot request an official transcript, so it is the wrong choice for anyone who needs documentation for tuition reimbursement or graduate applications.</p>
+ <p>If a letter grade does not suit your course at all, say so and the program can likely switch it to CR/NC. Put the requirements for a letter grade or credit in your syllabus.</p>`},
+
+{id:"sop", ph:"p6", tp:"t-grading", pg:"16",
+ t:"Statements of Participation for short courses",
+ body:`<p>Available <strong>only</strong> for short courses meeting fewer than 10 hours, which are too short to carry credit. Courses meeting 10 hours or more offer Credit as a grade option and appear on an official transcript instead.</p>
+ <p>Staff send you the template filled in with your course information before the course ends. You add a student's name when they request one: email it for online courses, or bring physical copies or send it on request for on-campus courses.</p>
+ <p>Most courses in this category meet only one or two days. If yours runs longer, take attendance and state on your syllabus how many sessions are required. Suggested: 100% of sessions, or 80% if sessions are recorded so a student can watch what they missed.</p>`},
+
+{id:"waiver", ph:"p6", tp:"t-pay", pg:"27", b:["money"],
+ t:"Claim your instructor tuition waiver",
+ body:`<p>After you successfully complete your first Continuing Studies course <strong>with a global course evaluation score of 4.0 or higher</strong>, CSP waives tuition for any course with <strong>unlimited enrollment</strong>.</p>
+ <p><strong>Eligibility:</strong> you must have taught with CSP within the past 5 years, or have taught with CSP 5 times.</p>
+ <div class="how"><h4>What to do</h4><ol>
+ <li>Create a CSP student account online.</li>
+ <li>Email Continuing Studies so staff can activate the discount on your record.</li>
+ <li>The CSP Instructor discount option then appears during registration.</li>
+ </ol></div>
+ <p>You still pay the <strong>$35 registration fee</strong> and any non-refundable course fees, such as a materials fee. Limited-enrollment courses are excluded because of space constraints, but carry a <strong>20% discount</strong> instead.</p>`},
+
+/* ================= p7: employment and pay ================= */
+{id:"payschedule", ph:"p7", tp:"t-pay", pg:"24-25",
+ t:"When and how you get paid",
+ body:`<p>Your salary is paid automatically in <strong>equal installments</strong> across the employment period on your contract, on Stanford's semi-monthly schedule. Current full-time Stanford employees receive it as <strong>Supplemental pay</strong> in equal installments within the course dates.</p>
+ <p><strong>Pay dates are the 7th and the 22nd</strong> of each month, or the nearest preceding business day if that falls on a weekend or holiday.</p>
+ <ul>
+ <li>The <strong>7th</strong> pays the period from the 16th through the last day of the previous month.</li>
+ <li>The <strong>22nd</strong> pays the period from the 1st through the 15th.</li>
+ </ul>
+ <div class="watch"><p><strong>The default delivery is a hard copy "live" check.</strong> If you want your pay in a bank account, you have to enroll in direct deposit yourself.</p></div>`},
+
+{id:"deposit", ph:"p7", tp:"t-pay", pg:"25",
+ t:"Set up direct deposit and tax withholding",
+ body:`<p>Both are done on the <strong>Sequoia</strong> website, Stanford's HR and payroll system, once you are actively hired. Log in with your SUNet ID.</p>
+ <p><strong>Direct deposit:</strong> you may split pay across up to 10 bank accounts, with no fee, and can enroll, update, or cancel at any time. Your pay cannot be deposited into a company account.</p>
+ <p><strong>Tax withholding:</strong> federal and state income taxes are deducted from Stanford paychecks, and all employees must submit federal and state withholding forms. Declare or update withholding in Sequoia using IRS Form W-4 and California's DE-4.</p>
+ <p>If you live and work outside California you will be set up at a standard withholding rate for your state where applicable. To change it, email CSP Human Resources for instructions on submitting your state's form.</p>`},
+
+{id:"w2", ph:"p7", tp:"t-pay", pg:"25",
+ t:"Your W-2 and what counts as the tax year",
+ body:`<p>Stanford reports all taxable wages and associated taxes, and sends each employee a <strong>W-2 Wage and Tax Statement</strong> at the beginning of each tax year for use in filing federal and state returns. Availability schedules and distribution methods are on the Stanford W-2 Statements page.</p>
+ <div class="watch"><p><strong>For payroll purposes the tax year is not the calendar year.</strong> It begins with the paycheck issued <strong>January 7</strong>, covering December 16 to 31 of the previous year, and ends with the paycheck issued <strong>December 22</strong>, covering December 1 to 15.</p></div>`},
+
+{id:"timecard", ph:"p7", tp:"t-pay", pg:"25-26",
+ t:"Timecards, if you are paid hourly",
+ body:`<p>In rare cases instructors are hired as hourly, non-exempt employees for course development work outside a regular teaching contract. Most Course Support Specialists are hourly too, except those who are current full-time Stanford employees, who receive Supplemental Pay through their regular paycheck.</p>
+ <p>Hourly contingent workers must keep an accurate record of <strong>daily hours, including actual start and stop times and meal periods</strong>, and submit a timecard each pay period through Sequoia.</p>
+ <p><strong>The limits:</strong> the work week runs 12:01 a.m. Monday to midnight Sunday. Straight time is up to 8 hours a day and 40 hours a week. You should not work more than 8 hours in a day, more than 40 hours in a week, or more than 6 days in a week, and <strong>one full rest day must be taken each work week</strong>.</p>
+ <p>If you need to exceed those limits or your contract's total estimated hours, contact CSP Human Resources first to authorize the additional hours.</p>`},
+
+{id:"worklocation", ph:"p7", tp:"t-pay", pg:"24", b:["required"],
+ t:"Where you are allowed to work",
+ body:`<div class="watch"><p><strong>You must be physically in the United States for all work on your course.</strong> Continuing Studies cannot employ people outside the U.S. because of the regulatory and compliance exposure to both you and the University. If you travel internationally during your employment dates, you may not perform any work while out of the country. This applies to Course Support Specialists too.</p></div>
+ <p><strong>Working outside California:</strong> you are subject to the employment laws of the state you work in. Notify Continuing Studies immediately about any prospective arrangement involving work outside California, even temporarily, so state tax, employment tax, and workers compensation rules are handled correctly.</p>`},
+
+{id:"emailaccess", ph:"p7", tp:"t-tech", pg:"2",
+ t:"Your Stanford access ends with your assignment",
+ body:`<p>Stanford webmail and other authenticated Stanford sites and services are tied to your employment status. <strong>When your assignment ends you lose access</strong>, including Stanford email, unless you hold another active job or a sponsored affiliation.</p>
+ <p>Plan for it: move anything you need out before your contract end date, and remember that reimbursements must also be processed while you are still an active employee.</p>`},
+
+{id:"tools", ph:"p7", tp:"t-tech", pg:"2",
+ t:"Every system you will be asked to log in to",
+ body:`<ul>
+ <li><strong>Canvas:</strong> the learning management system. A shell is created for every class; post announcements, share Zoom info, upload materials, manage discussions and assignments. Login: <strong>SUNet ID</strong>.</li>
+ <li><strong>Instructor Portal</strong> on the Continuing Studies website: course proposals and planning, textbook list, preliminary syllabus, your student roster, and grade submission. Login: <strong>CSP Instructor Portal credentials</strong>, not your SUNet ID.</li>
+ <li><strong>Panopto:</strong> moves, publishes, and stores your Zoom recordings in Canvas automatically. <strong>No login needed.</strong></li>
+ <li><strong>Sequoia:</strong> Stanford's employee management system: direct deposit, pay statements, tax withholding, timecards, mandated training. Login: <strong>SUNet ID</strong>.</li>
+ <li><strong>Slack:</strong> reach staff during business hours and class sessions. Login: <strong>SUNet ID</strong>.</li>
+ <li><strong>Stanford Webmail:</strong> tied to your employment status. Login: <strong>SUNet ID</strong>.</li>
+ <li><strong>Zoom:</strong> CSP provides a licensed account for your course. Login: the <strong>dedicated email address</strong> you give CSP for this purpose.</li>
+ </ul>`}
+];
+
+const NUMBERS = [
+  {n:"$100",  d:"Materials budget per course. Food, drinks, power cords, computers and internet upgrades do not qualify.", go:"reimburse"},
+  {n:"60 days", d:"Deadline to submit a reimbursement receipt. Thirty days is better.", go:"reimburse"},
+  {n:"10 business days", d:"To submit final grades after your course end date.", go:"grades"},
+  {n:"3 weeks", d:"Minimum notice for a guest speaker, or the honorarium is not guaranteed.", go:"guest"},
+  {n:"$150 &times; 2", d:"Honorarium per guest speaker, for a maximum of two speakers.", go:"guest"},
+  {n:"30 days", d:"From your hire date to finish mandated training. Your assignment depends on it.", go:"training"},
+  {n:"$80", d:"Textbook total above which you should make some texts optional.", go:"textbooks"},
+  {n:"80%", d:"Attendance recommended for earning Credit in a CR/NC course.", go:"gradeoptions"},
+  {n:"7th and 22nd", d:"Pay dates each month, or the nearest preceding business day.", go:"payschedule"},
+  {n:"24 hours", d:"For a Zoom recording to appear in Canvas after class.", go:"recording"}
+];
+
+const CONTACTS = [
+  {cls:"card primary", h:"Course and student questions",
+   addr:"continuingstudies@stanford.edu",
+   body:`<p>Phone 650-725-2650. Business hours Monday to Friday, 8:30 a.m. to 5:00 p.m. Online support also runs most evenings and weekends when classes are in session.</p>`,
+   list:["Course description, your bio, course schedule","Textbooks, syllabi, first assignment","Canvas, Zoom, Panopto, and Slack","Rescheduling a session for illness or emergency","Course evaluation","Course materials reimbursement","Grading and submitting grades","Problematic students","Student drops and wait lists"]},
+  {cls:"card", h:"Employment, contract and payroll",
+   addr:"csphumanresources@stanford.edu",
+   body:`<p>The CSP Human Resources team.</p>`,
+   list:["Hiring process, policies, contract, paperwork","Payroll and timecards","Working outside California","General HR questions"]},
+  {cls:"card", h:"Student behavior consultations",
+   addr:"tollafie@stanford.edu",
+   body:`<p><strong>Amy Tollafield</strong>, Student Services Manager. Reach out for guidance on a behavioral concern, especially a serious one, and to escalate if a first conversation with the student does not resolve it.</p>`,
+   list:[]},
+  {cls:"card", h:"Disability and accessibility",
+   addr:"disability.access@stanford.edu",
+   body:`<p>650-725-0326 voice, 650-723-1216 TTY. Send <em>students</em> asking about accommodations to Stanford's Diversity &amp; Access Office.</p>`,
+   list:[]},
+  {cls:"card", h:"Logo and name use permission",
+   addr:"emma.walker@stanford.edu",
+   body:`<p><strong>Emma Walker</strong>. Ask before using any Stanford or Continuing Studies name or logo in course marketing.</p>`,
+   list:[]}
+];
+
+const QUICK = [
+  {label:"A student wants to audit", q:"audit"},
+  {label:"I need to cancel a class", q:"cancel or reschedule"},
+  {label:"Getting reimbursed", q:"reimbursed"},
+  {label:"Inviting a guest speaker", q:"guest speaker"},
+  {label:"Submitting grades", q:"final grades"},
+  {label:"A student is disruptive", q:"disruptive"},
+  {label:"What is my official title?", q:"official title"},
+  {label:"Starting my Zoom meeting", q:"start your class meeting"}
+];
+
+/* ------------------------------------------------------------------
+   Rendering and behavior
+   ------------------------------------------------------------------ */
+const STORE_KEY = "csp-handbook-done-v1";
+const content   = document.getElementById("content");
+const qInput    = document.getElementById("q");
+const countEl   = document.getElementById("count");
+const clearBtn  = document.getElementById("clearBtn");
+const slashHint = document.getElementById("slashHint");
+const tabWhen   = document.getElementById("tab-when");
+const tabTopic  = document.getElementById("tab-topic");
+const tabCheck  = document.getElementById("tab-check");
+
+let mode = "when";
+let done = new Set();
+try{
+  const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+  if(Array.isArray(saved)) done = new Set(saved);
+}catch(e){ /* storage unavailable or corrupt; start empty */ }
+
+function saveDone(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify([...done])); }
+  catch(e){ /* private browsing; checkmarks just won't persist */ }
+}
+
+const PHASE_BY_KEY = Object.fromEntries(PHASES.map(p=>[p.k,p]));
+const TOPIC_BY_KEY = Object.fromEntries(TOPICS.map(t=>[t.k,t]));
+
+/* The opt-in checklist covers actual tasks, not reference policy.
+   0 = everyone does this, 1 = only if it applies to your course. */
+const ACT = {
+  hiring:0, training:0, room:0, css:1, cap:1,
+  textbooks:0, syllabus:0, firstassign:1, zoomacct:0, panoptoset:1, slack:0,
+  techreq:0, canvasprep:0, visitroom:1, roster:0, welcome:0,
+  evals:0, grades:0, waiver:1, deposit:1
+};
+
+const BADGE = {
+  deadline:{cls:"b-deadline", label:"Deadline"},
+  required:{cls:"b-required", label:"Required"},
+  early:   {cls:"b-early",    label:"Do early"},
+  money:   {cls:"b-money",    label:"Money"}
+};
+
+/* plain-text haystack for search, built once */
+const stripper = document.createElement("div");
+ENTRIES.forEach(e=>{
+  stripper.innerHTML = e.body;
+  e._hay = (
+    e.t + " " + (stripper.textContent || "") + " " +
+    PHASE_BY_KEY[e.ph].h + " " + TOPIC_BY_KEY[e.tp].h + " " +
+    (e.b || []).map(k=>BADGE[k].label).join(" ")
+  ).toLowerCase();
+});
+stripper.innerHTML = "";
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function itemHtml(e, forceOpen, withCheck){
+  const badges = (e.b || []).map(k=>
+    `<span class="badge ${BADGE[k].cls}">${BADGE[k].label}</span>`
+  ).join("");
+  const isDone = withCheck && done.has(e.id);
+  const optTag = (withCheck && ACT[e.id] === 1)
+    ? `<span class="optional">Only if it applies</span>` : "";
+  const check = withCheck
+    ? `<span class="box"><input type="checkbox" ${isDone?"checked":""} data-chk="${e.id}"
+             aria-label="Mark as done: ${esc(e.t)}"></span>`
+    : "";
+  return `
+  <div class="item ${withCheck?"checkable":""} ${isDone?"done":""}" data-id="${e.id}">
+    ${check}
+    <details ${forceOpen?"open":""} id="d-${e.id}">
+      <summary>
+        <span class="ttl">${esc(e.t)}</span>
+        ${badges}${optTag}
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+      </summary>
+      <div class="body">
+        ${e.body}
+        <p class="meta">
+          <span>Handbook p. ${e.pg}</span>
+          <span>${TOPIC_BY_KEY[e.tp].h}</span>
+          <span>${PHASE_BY_KEY[e.ph].h}</span>
+        </p>
+      </div>
+    </details>
+  </div>`;
+}
+
+function groupHtml(g, entries, tagColor, tagLabel, forceOpen, withCheck){
+  if(!entries.length) return "";
+  const tag = tagColor
+    ? `<div><span class="gtag" style="background:${tagColor}">${tagLabel}</span></div>` : "";
+  return `
+  <section class="group" aria-labelledby="h-${g.k}">
+    ${tag}
+    <h2 id="h-${g.k}">${g.h}</h2>
+    <p class="gsub">${g.sub}</p>
+    ${entries.map(e=>itemHtml(e, forceOpen, withCheck)).join("")}
+  </section>`;
+}
+
+function render(){
+  const q = qInput.value.trim().toLowerCase();
+  const searching = q.length > 0;
+  const terms = q.split(/\s+/).filter(Boolean);
+  const matches = searching
+    ? ENTRIES.filter(e => terms.every(t => e._hay.includes(t)))
+    : ENTRIES;
+
+  clearBtn.hidden = !searching;
+  slashHint.hidden = searching || document.activeElement === qInput;
+
+  if(searching){
+    countEl.textContent = matches.length === 0
+      ? `Nothing matches "${qInput.value.trim()}". Try a single word, like reimbursement, roster, Panopto, or honorarium.`
+      : `${matches.length} of ${ENTRIES.length} ${matches.length===1?"entry":"entries"} match "${qInput.value.trim()}".`;
+  }else{
+    countEl.textContent = "";
+  }
+
+  if(matches.length === 0){
+    content.innerHTML = `<p class="empty">No results. The handbook covers course setup, technology, classrooms, materials and money, students and conduct, grading, and employment. If it is not here, email Continuing Studies.</p>`;
+    return;
+  }
+
+  /* searching flattens the view and opens what matched */
+  if(searching){
+    content.innerHTML = `
+    <section class="group">
+      <h2>Search results</h2>
+      <p class="gsub">Grouping is set aside while you search, so the closest answer is at the top.</p>
+      ${matches.map(e=>itemHtml(e, true)).join("")}
+    </section>`;
+    wire();
+    return;
+  }
+
+  if(mode === "when"){
+    content.innerHTML = PHASES.map(p =>
+      groupHtml(p, matches.filter(e=>e.ph===p.k), p.color, p.label, false, false)
+    ).join("");
+  }else if(mode === "topic"){
+    content.innerHTML = TOPICS.map(t =>
+      groupHtml(t, matches.filter(e=>e.tp===t.k), null, null, false, false)
+    ).join("");
+  }else{
+    const tasks = ENTRIES.filter(e => e.id in ACT);
+    const finished = tasks.filter(e => done.has(e.id)).length;
+    const pct = tasks.length ? Math.round((finished / tasks.length) * 100) : 0;
+    content.innerHTML = `
+    <div class="tracker">
+      <h2>Only if you want to keep score</h2>
+      <p>Nobody is checking this and nothing is submitted. It is here for the one instructor who wants to confirm they have not forgotten a form. Everything else on this page works without it.</p>
+      <div class="bar" role="presentation"><span style="width:${pct}%"></span></div>
+      <p class="tally">${finished} of ${tasks.length} done</p>
+      <button type="button" id="resetBtn">Clear all checkmarks</button>
+    </div>
+    ` + PHASES.map(p =>
+      groupHtml(p, tasks.filter(e=>e.ph===p.k), p.color, p.label, false, true)
+    ).join("");
+  }
+  wire();
+}
+
+function wire(){
+  const reset = document.getElementById("resetBtn");
+  if(reset){
+    reset.addEventListener("click", ()=>{
+      done.clear();
+      saveDone();
+      render();
+    });
+  }
+  content.querySelectorAll("input[data-chk]").forEach(box=>{
+    box.addEventListener("change", ()=>{
+      const id = box.dataset.chk;
+      if(box.checked) done.add(id); else done.delete(id);
+      saveDone();
+      const row = box.closest(".item");
+      if(row) row.classList.toggle("done", box.checked);
+      const tally = content.querySelector(".tally");
+      const fill  = content.querySelector(".bar span");
+      if(tally && fill){
+        const tasks = ENTRIES.filter(x => x.id in ACT);
+        const n = tasks.filter(x => done.has(x.id)).length;
+        tally.textContent = `${n} of ${tasks.length} done`;
+        fill.style.width = (tasks.length ? Math.round((n/tasks.length)*100) : 0) + "%";
+      }
+    });
+  });
+}
+
+/* open one entry by id, from a quick link or a number tile */
+function openEntry(id){
+  qInput.value = "";
+  render();
+  const d = document.getElementById("d-" + id);
+  if(!d) return;
+  d.open = true;
+  d.scrollIntoView({behavior:"smooth", block:"center"});
+  const s = d.querySelector("summary");
+  if(s) s.focus({preventScroll:true});
+}
+
+/* ---------- search wiring ---------- */
+let t = null;
+qInput.addEventListener("input", ()=>{
+  clearTimeout(t);
+  t = setTimeout(render, 110);
+});
+qInput.addEventListener("focus", ()=>{ slashHint.hidden = true; });
+qInput.addEventListener("blur",  ()=>{ slashHint.hidden = qInput.value.trim().length > 0; });
+qInput.addEventListener("keydown", e=>{
+  if(e.key === "Escape"){ qInput.value = ""; render(); }
+});
+clearBtn.addEventListener("click", ()=>{ qInput.value = ""; render(); qInput.focus(); });
+
+document.addEventListener("keydown", e=>{
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  if(e.key === "/" && !typing){
+    e.preventDefault();
+    qInput.focus();
+    qInput.select();
+  }
+});
+
+/* ---------- tabs ---------- */
+const MODES = ["when", "topic", "check"];
+const TABS  = {when:tabWhen, topic:tabTopic, check:tabCheck};
+
+function setMode(next, focus){
+  mode = next;
+  MODES.forEach(m=>{
+    const sel = m === mode;
+    TABS[m].setAttribute("aria-selected", String(sel));
+    TABS[m].tabIndex = sel ? 0 : -1;
+  });
+  content.setAttribute("aria-labelledby", "tab-" + mode);
+  render();
+  if(focus) TABS[mode].focus();
+}
+MODES.forEach(m=>{
+  TABS[m].addEventListener("click", ()=> setMode(m));
+  TABS[m].addEventListener("keydown", e=>{
+    if(e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const i = MODES.indexOf(mode);
+    const step = e.key === "ArrowRight" ? 1 : -1;
+    setMode(MODES[(i + step + MODES.length) % MODES.length], true);
+  });
+});
+tabTopic.tabIndex = -1;
+tabCheck.tabIndex = -1;
+
+/* ---------- quick links, numbers, contacts ---------- */
+const quickList = document.getElementById("quickList");
+QUICK.forEach(item=>{
+  const li = document.createElement("li");
+  const b  = document.createElement("button");
+  b.type = "button";
+  b.textContent = item.label;
+  b.addEventListener("click", ()=>{
+    qInput.value = item.q;
+    render();
+    content.scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  li.appendChild(b);
+  quickList.appendChild(li);
+});
+
+const numbersList = document.getElementById("numbersList");
+NUMBERS.forEach(x=>{
+  const div = document.createElement("div");
+  div.className = "n";
+  div.innerHTML = `<dt>${x.n}</dt><dd>${x.d}</dd>`;
+  const dd = div.querySelector("dd");
+  const a  = document.createElement("a");
+  a.href = "#";
+  a.textContent = "Read the rule";
+  a.style.display = "block";
+  a.style.marginTop = "6px";
+  a.style.fontWeight = "600";
+  a.style.fontSize = "13.5px";
+  a.addEventListener("click", ev=>{ ev.preventDefault(); openEntry(x.go); });
+  dd.appendChild(a);
+  numbersList.appendChild(div);
+});
+
+const contactGrid = document.getElementById("contactGrid");
+CONTACTS.forEach(c=>{
+  const div = document.createElement("div");
+  div.className = c.cls;
+  div.innerHTML =
+    `<h3>${c.h}</h3>` +
+    `<p class="addr"><a href="mailto:${c.addr}">${c.addr}</a></p>` +
+    c.body +
+    (c.list.length ? `<ul>${c.list.map(i=>`<li>${i}</li>`).join("")}</ul>` : "");
+  contactGrid.appendChild(div);
+});
+
+render();
+</script>
+</body>
+</html>
