@@ -73,7 +73,6 @@ h1{
   margin:0 0 14px;color:var(--black);
 }
 .lede{font-size:clamp(16px,1.6vw,18px);color:var(--coolgrey);max-width:60ch;margin:0 0 6px;}
-.updated{font-size:13.5px;color:var(--coolgrey);margin:14px 0 0;}
 
 /* ---------- search ---------- */
 .searchbar{position:relative;margin:clamp(20px,3vw,28px) 0 8px;}
@@ -301,8 +300,7 @@ details[open] .chev{transform:rotate(180deg);}
   <header class="hero">
     <p class="eyebrow">Continuing Studies</p>
     <h1>Instructor Handbook</h1>
-    <p class="lede">Everything in the 30-page handbook, reorganized so you can find one answer fast. Search it, walk the quarter in order, or browse by topic.</p>
-    <p class="updated">Source: Instructor Handbook, updated July 29, 2026. When this page and the official handbook disagree, the handbook governs.</p>
+    <p class="lede">Deadlines, forms, policies, and who to contact, for teaching with Continuing Studies.</p>
 
     <div class="searchbar">
       <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="#53565A" stroke-width="2.2" aria-hidden="true">
@@ -331,13 +329,11 @@ details[open] .chev{transform:rotate(180deg);}
 
   <section class="numbers" aria-labelledby="numbers-h">
     <h2 id="numbers-h">Numbers worth memorizing</h2>
-    <p class="gsub">The limits and deadlines that cause the most email.</p>
     <dl id="numbersList"></dl>
   </section>
 
   <section class="contacts" aria-labelledby="contacts-h">
     <h2 id="contacts-h">Who to email</h2>
-    <p class="gsub">Sending a question to the wrong inbox is the most common reason an answer takes days instead of hours.</p>
     <div class="cgrid" id="contactGrid"></div>
     <div class="urgent">
       <h3>On campus, right now</h3>
@@ -1183,7 +1179,6 @@ function groupHtml(g, entries, tagColor, tagLabel, forceOpen, withCheck){
   <section class="group" aria-labelledby="h-${g.k}">
     ${tag}
     <h2 id="h-${g.k}">${g.h}</h2>
-    <p class="gsub">${g.sub}</p>
     ${entries.map(e=>itemHtml(e, forceOpen, withCheck)).join("")}
   </section>`;
 }
@@ -1230,9 +1225,9 @@ function render(){
 
   if(searching){
     if(total === 0){
-      countEl.textContent = `Nothing matches "${typed}". Try one word, like reimbursement, roster, Panopto, or honorarium.`;
+      countEl.textContent = `Nothing found for "${typed}". Try a single word, such as reimbursement, roster, Panopto, or honorarium.`;
     }else if(loose){
-      countEl.textContent = `No entry contains every word in "${typed}". Showing the closest matches, best first.`;
+      countEl.textContent = `No exact match for "${typed}". Showing the closest results.`;
     }else{
       countEl.textContent = `${total} ${total===1?"result":"results"} for "${typed}".`;
     }
@@ -1241,7 +1236,7 @@ function render(){
   }
 
   if(searching && total === 0){
-    content.innerHTML = `<p class="empty">No results. This covers course setup, technology, classrooms, materials and money, students and conduct, grading, and employment. If it is not here, email Continuing Studies.</p>`;
+    content.innerHTML = `<p class="empty">No results. This page covers course setup, technology, classrooms, materials and expenses, students and conduct, grading, and employment. For anything else, email Continuing Studies.</p>`;
     return;
   }
 
@@ -1250,7 +1245,6 @@ function render(){
     const jumpHtml = statics.length ? `
     <section class="group">
       <h2>${matches.length ? "Elsewhere on this page" : "Further down this page"}</h2>
-      <p class="gsub">This answer sits outside the entry list.</p>
       <div class="jump">${statics.map(b =>
         `<button type="button" data-jump="${b.sel}">${b.label}<span>${b.hint}</span></button>`
       ).join("")}</div>
@@ -1259,7 +1253,6 @@ function render(){
     const entriesHtml = matches.length ? `
     <section class="group">
       <h2>${statics.length ? "Matching entries" : "Search results"}</h2>
-      <p class="gsub">Grouping is set aside while you search, so the closest answer is at the top.</p>
       ${matches.map(e=>itemHtml(e, true)).join("")}
     </section>` : "";
 
@@ -1284,8 +1277,8 @@ function render(){
     const pct = tasks.length ? Math.round((finished / tasks.length) * 100) : 0;
     content.innerHTML = `
     <div class="tracker">
-      <h2>Only if you want to keep score</h2>
-      <p>Nobody is checking this and nothing is submitted. It is here for the one instructor who wants to confirm they have not forgotten a form. Everything else on this page works without it.</p>
+      <h2>Optional progress check</h2>
+      <p>For confirming you have not missed a form. Nothing here is submitted, monitored, or shared.</p>
       <div class="bar" role="presentation"><span style="width:${pct}%"></span></div>
       <p class="tally">${finished} of ${tasks.length} done</p>
       <button type="button" id="resetBtn">Clear all checkmarks</button>
