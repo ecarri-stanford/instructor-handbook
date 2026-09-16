@@ -1032,7 +1032,7 @@ const ALIASES = {
   cap:"enrollment limit cap class size too many students",
   training:"stars mandatory required compliance harassment violence safety",
   hiring:"background check i9 onboarding paperwork offer letter hired start",
-  textbooks:"books textbook bookstore order reading list required reading",
+  textbooks:"books textbook bookstore order reading list required reading desk copy instructor copy examination copy publisher",
   syllabus:"syllabus submit due public course description",
   firstassign:"first assignment prework homework before class starts survey",
   zoomacct:"zoom account email address license set up",
@@ -1040,54 +1040,54 @@ const ALIASES = {
   slack:"slack channel contact staff message help during class",
   visitroom:"see my room visit classroom find my classroom where is my class location",
   canvasprep:"canvas page course site publish set up post materials",
-  welcome:"welcome message announcement email my students before class",
+  welcome:"welcome message announcement email my students before class introduce myself first email contact my students before the quarter",
   roster:"roster class list who is enrolled student names download",
   techreq:"computer requirements laptop browser safari chrome firefox webcam microphone headset equipment buy gear internet speed",
   av:"projector hdmi adapter cable smartpanel smart panel screen display sound",
   wifi:"wifi wireless internet network students cannot connect guest",
-  startmeeting:"zoom will not start cannot start meeting host link join launch class",
+  startmeeting:"zoom will not start cannot start meeting host link join launch class link meeting link zoom link waiting room",
   firstminutes:"first class orientation introduction etiquette ground rules",
-  attendance:"audit auditing sit in unregistered crasher guest attendance take roll",
-  techfail:"broken not working frozen no audio no video microphone camera glitch help now",
+  attendance:"audit auditing sit in unregistered crasher guest attendance take roll sign in sheet attendance sheet head count",
+  techfail:"broken not working frozen no audio no video microphone camera glitch help now chat mute unmute raise hand participants panel screen share frozen",
   recording:"recordings video posted canvas missed class rewatch download share",
   bots:"ai bot notetaker note taker otter fireflies transcription recording bot",
   officehours:"office hours availability meet students",
-  behavior:"disruptive rude angry racist sexist offensive intoxicated drunk problem student complaint remove kick out difficult",
-  conduct:"code of conduct rules expectations misconduct cheating plagiarism",
-  schedchange:"sick illness emergency cancel class reschedule miss a class covid make up session",
+  behavior:"disruptive rude angry racist sexist offensive intoxicated drunk problem student complaint remove kick out difficult comment comments remark remarks offensive language swearing yelling argument upset yelled shouted swore interrupted",
+  conduct:"code of conduct rules expectations misconduct cheating plagiarism harassment intimidation threats abuse misconduct sexual misconduct fundamental standard",
+  schedchange:"sick illness emergency cancel class reschedule miss a class covid make up session substitute swap a class change the date change the time make up",
   guest:"guest speaker visitor honorarium pay a speaker bring someone in",
-  reimburse:"receipt expense money back refund buy purchase reimburse supplies",
-  copies:"print printing photocopy copies handouts fedex kinkos paper",
+  reimburse:"receipt expense money back refund buy purchase reimburse supplies supplies laser pointer adapter dongle chalk markers food snacks coffee drinks water",
+  copies:"print printing photocopy copies handouts fedex kinkos paper photocopies copying duplicating paper handout printer printers print printouts",
   copyright:"copyright fair use permission scan article pdf posting readings",
-  library:"library books borrow research id card",
-  digitaltools:"app tool software discord facebook linkedin third party signup",
+  library:"library books borrow research id card id card stanford id badge borrowing privileges",
+  digitaltools:"app tool software discord facebook linkedin third party signup poll everywhere polling clickers survey tool website",
   ferpa:"privacy ferpa confidential roster grades bcc student data",
   contactuse:"email my students marketing newsletter promote solicit mailing list",
   coi:"sell my book my product conflict of interest promote my business",
   title:"title lecturer professor adjunct faculty resume cv linkedin what do I call myself",
   logo:"logo branding stanford name trademark marketing media kit promote my course",
-  accommodations:"disability accessible accommodation captions oae accessibility",
+  accommodations:"disability accessible accommodation captions oae accessibility captioning captions interpreter note taker asl wheelchair",
   assignments:"paper length assignment project portfolio presentation exam how long",
-  waitlist:"waitlist full course cancelled enrollment low sign up",
-  evals:"evaluation survey feedback ratings scores",
-  grades:"grades submit grading deadline transcript grade entry",
-  gradeoptions:"incomplete pass fail credit no credit letter grade NGR what grade",
+  waitlist:"waitlist full course cancelled enrollment low sign up drop drops withdraw withdrawal leave the course quit the course",
+  evals:"evaluation survey feedback ratings scores evaluations scores global score response rate",
+  grades:"grades submit grading deadline transcript grade entry change a grade grade change late grades correct a grade",
+  gradeoptions:"incomplete pass fail credit no credit letter grade NGR what grade extension late work more time deadline extension",
   sop:"certificate statement of participation short course proof",
-  waiver:"free course tuition waiver discount take a class benefit perk",
+  waiver:"free course tuition waiver discount take a class benefit perk perk benefit discount register as a student",
   payschedule:"paycheck when do I get paid salary pay date payday",
   deposit:"direct deposit bank account taxes w4 withholding sequoia",
   w2:"w2 taxes tax form tax year",
   timecard:"timecard timesheet hours overtime hourly",
-  worklocation:"travel abroad out of state moving work location california international",
+  worklocation:"travel abroad out of state moving work location california international another state different state relocate relocating moving overseas remote",
   emailaccess:"lose access account ends contract over leaving quit fired email stops working",
-  tools:"logins passwords systems accounts sunet what do I log into"
+  tools:"logins passwords systems accounts sunet what do I log into log in login cannot log in password sunet id credentials"
 };
 
 /* Sections that live outside the entry list but that people search for. */
 const STATIC_BLOCKS = [
   {key:"urgent", sel:".urgent", label:"On campus, right now",
    hint:"Lockouts, security, emergencies, and mid-class tech help",
-   alias:"locked out lockout key door cannot get in emergency 911 police security dispatcher facilities lbre urgent help now"},
+   alias:"locked out lockout locked lost key keys door doors cannot get in classroom building emergency 911 police security dispatcher facilities lbre fire ambulance injured urgent help now right now after hours"},
   {key:"contacts", sel:".contacts", label:"Who to email",
    hint:"Which inbox handles what, and the phone number",
    alias:"who do I email contact phone call support inbox address staff"},
@@ -1127,10 +1127,29 @@ function esc(s){
 const STOP = new Set(["a","an","the","and","or","of","to","for","in","on","at","is","it",
   "do","does","did","i","my","me","we","our","you","your","how","what","can","should",
   "would","be","am","are","was","if","that","this","with","from","about","get","got",
-  "there","their","have","has","need","want"]);
+  "there","their","have","has","need","want","into","when","who","where"]);
 
+function termVariants(t){
+  const v = new Set([t]);
+  if(t.length > 3){
+    if(/ies$/.test(t)) v.add(t.slice(0, -3) + "y");
+    if(/es$/.test(t))  v.add(t.slice(0, -2));
+    if(/s$/.test(t))   v.add(t.slice(0, -1));
+  }
+  if(t.length > 8) v.add(t.slice(0, Math.max(7, t.length - 4)));
+  if(t.length > 4){
+    if(/ing$/.test(t)) v.add(t.slice(0, -3));
+    if(/ed$/.test(t))  v.add(t.slice(0, -2));
+    if(/er$/.test(t))  v.add(t.slice(0, -2));
+  }
+  return [...v];
+}
 function termRegex(t){
-  return new RegExp("\\b" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+  const alt = termVariants(t)
+    .map(x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .sort((a, b) => b.length - a.length)
+    .join("|");
+  return new RegExp("\\b(?:" + alt + ")", "i");
 }
 function scoreEntry(e, res){
   let score = 0, hits = 0;
@@ -1174,17 +1193,29 @@ function snippetFor(e, res){
 }
 
 let staticHay = null;
-function matchStatics(terms){
+function matchStatics(res){
   if(!staticHay){
     staticHay = STATIC_BLOCKS.map(b=>{
       const el = document.querySelector(b.sel);
       return Object.assign({}, b, {
-        hay: ((el ? el.innerText : "") + " " + b.label + " " + b.hint + " " + b.alias).toLowerCase()
+        key:  (b.label + " " + b.hint + " " + b.alias).toLowerCase(),
+        text: (el ? el.innerText : "").toLowerCase()
       });
     });
   }
-  const res = terms.map(termRegex);
-  return staticHay.filter(b => res.every(re => re.test(b.hay)));
+  return staticHay
+    .map(b=>{
+      let score = 0, hits = 0;
+      res.forEach(re=>{
+        let h = 0;
+        if(re.test(b.key))  h += 8;
+        if(re.test(b.text)) h += 1;
+        if(h){ hits++; score += h; }
+      });
+      return Object.assign({}, b, {score, hits});
+    })
+    .filter(b => b.hits === res.length)
+    .sort((a, b) => b.score - a.score);
 }
 
 function itemHtml(e, forceOpen, withCheck){
@@ -1307,6 +1338,7 @@ function render(){
   let matches = ENTRIES;
   let statics = [];
   let loose = false;
+  let topEntry = 0;
 
   if(searching){
     const res = terms.map(termRegex);
@@ -1318,13 +1350,17 @@ function render(){
     const full = scored.filter(x => x.hits === terms.length);
     if(full.length){
       matches = full.map(x => x.e);
-    }else if(terms.length > 1 && scored.length){
-      matches = scored.map(x => x.e);
+      topEntry = full[0].score;
+    }else if(terms.length > 1 && scored.some(x => x.score >= 4)){
+      /* a body-only coincidence is not an answer, it just looks like one */
+      const keep = scored.filter(x => x.score >= 4);
+      matches = keep.map(x => x.e);
+      topEntry = keep[0].score;
       loose = true;
     }else{
       matches = [];
     }
-    statics = matchStatics(terms);
+    statics = matchStatics(res);
     if(loose && statics.length){
       /* the real answer is a page section; weak entry matches are just noise */
       matches = [];
@@ -1361,24 +1397,25 @@ function render(){
 
   /* searching flattens the view and opens what matched */
   if(searching){
-    const res = terms.map(termRegex);
     const bestLabel = loose ? "Closest match" : "Best match";
+    const sectionsWin = statics.length > 0 &&
+                        (matches.length === 0 || statics[0].score > topEntry);
 
     const staticsHtml = statics
-      .map((b, i) => staticResultHtml(b, i === 0 ? bestLabel : "Also here"))
+      .map((b, i) => staticResultHtml(b, sectionsWin && i === 0 ? bestLabel : "Also here"))
       .join("");
 
-    const entriesHtml = statics.length
-      ? matches.map(e => resultHtml(e, res, false)).join("")
-      : (matches.length
-          ? resultHtml(matches[0], res, true, bestLabel) +
-            matches.slice(1).map(e => resultHtml(e, res, false)).join("")
-          : "");
+    const entriesHtml = matches.length
+      ? (sectionsWin
+          ? matches.map(e => resultHtml(e, res, false)).join("")
+          : resultHtml(matches[0], res, true, bestLabel) +
+            matches.slice(1).map(e => resultHtml(e, res, false)).join(""))
+      : "";
 
     content.innerHTML = `
     <section class="group">
       <h2>Search results</h2>
-      ${staticsHtml}${entriesHtml}
+      ${sectionsWin ? staticsHtml + entriesHtml : entriesHtml + staticsHtml}
     </section>`;
     wire();
     return;
