@@ -22,6 +22,7 @@
   --black:#2E2D29;
   --coolgrey:#53565A;
   --line:#D6D5D4;      /* Black 20% */
+  --line-control:#82817F; /* Black 60%, for control edges that must clear 3:1 */
   --line-soft:#EBEAEA; /* Black 10% */
   --white:#FFFFFF;
   --plum:#620059;
@@ -33,6 +34,12 @@
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:"Source Sans 3",Calibri,"Segoe UI",Helvetica,Arial,sans-serif;
 }
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:50;
+  background:var(--white);color:var(--cardinal);font-weight:700;
+  padding:12px 16px;border:2px solid var(--cardinal);text-decoration:none;
+}
+.skip:focus{left:8px;top:8px;}
 .sr-only{
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
@@ -51,6 +58,9 @@ body{
 a{color:var(--cardinal);text-decoration:underline;text-underline-offset:2px;}
 a:hover{color:var(--cardinal-dark);}
 :focus-visible{outline:3px solid var(--cardinal);outline-offset:2px;}
+.card.primary :focus-visible{outline-color:var(--white);}
+/* keep a focused row out from under the sticky search bar */
+summary,.backlink,.tilegrid button,.topicgrid button{scroll-margin-top:120px;}
 
 /* ---------- identity bar ---------- */
 .identity{
@@ -93,6 +103,11 @@ h1{
   box-shadow:0 6px 14px -12px rgba(46,45,41,.5);
 }
 .searchbar{position:relative;margin:0;}
+.searchlabel{
+  display:block;font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--coolgrey);margin:0 0 7px;
+}
+.searchwrap.pinned .searchlabel{display:none;}
 .searchwrap.pinned .searchbar input{padding-top:12px;padding-bottom:12px;font-size:16px;}
 .searchbar input{
   width:100%;font-family:var(--sans);font-size:17px;
@@ -129,7 +144,7 @@ h1{
 .tilegrid button{
   font-family:var(--sans);font-size:14.5px;font-weight:600;line-height:1.35;
   text-align:left;background:var(--white);color:var(--black);
-  border:1px solid var(--line);padding:15px 14px 16px;cursor:pointer;
+  border:1px solid var(--line-control);padding:15px 14px 16px;cursor:pointer;
   display:flex;flex-direction:column;gap:10px;min-height:88px;
   transition:border-color .12s ease, background .12s ease;
 }
@@ -150,7 +165,7 @@ h1{
   color:var(--coolgrey);padding:12px 18px;cursor:pointer;margin-bottom:-2px;
 }
 .views button:hover{color:var(--black);}
-.views button[aria-selected="true"]{color:var(--cardinal);border-bottom-color:var(--cardinal);}
+.views button[aria-pressed="true"]{color:var(--cardinal);border-bottom-color:var(--cardinal);}
 
 /* ---------- groups ---------- */
 .group{margin:34px 0 0;}
@@ -165,7 +180,7 @@ h1{
 }
 .group.phase::before{
   content:"";position:absolute;left:15px;top:38px;bottom:0;
-  width:2px;background:var(--line);
+  width:2px;background:var(--line-control);
 }
 .group.phase:last-child::before{display:none;}
 .group.phase .step{
@@ -188,9 +203,10 @@ h1{
 }
 .topicgrid button{
   font-family:var(--sans);text-align:left;cursor:pointer;
-  background:var(--line-soft);border:none;padding:18px;
-  display:block;transition:background .12s ease;
+  background:var(--line-soft);border:1px solid var(--line-control);padding:17px;
+  display:block;transition:background .12s ease, border-color .12s ease;
 }
+.topicgrid button:hover{border-color:var(--cardinal);}
 .topicgrid button:hover{background:var(--cardinal);color:var(--white);}
 .topicgrid button:hover .tcount{color:var(--white);}
 .topicgrid .tname{
@@ -201,7 +217,7 @@ h1{
 .backlink{
   font-family:var(--sans);font-size:14px;font-weight:600;
   background:none;border:none;color:var(--cardinal);cursor:pointer;
-  padding:0;margin:26px 0 0;display:inline-flex;align-items:center;gap:6px;
+  padding:8px 4px;margin:22px 0 0;display:inline-flex;align-items:center;gap:6px;
 }
 .backlink:hover{color:var(--cardinal-dark);}
 .backlink svg{width:14px;height:14px;}
@@ -220,7 +236,10 @@ summary{
 }
 summary::-webkit-details-marker{display:none;}
 summary:hover .ttl{color:var(--cardinal);}
-.ttl{font-size:16.5px;font-weight:600;color:var(--black);}
+.ttl{
+  font-family:var(--sans);font-size:16.5px;font-weight:600;color:var(--black);
+  margin:0;display:inline;
+}
 .chev{
   margin-left:auto;flex:none;width:14px;height:14px;
   color:var(--coolgrey);transition:transform .15s ease;
@@ -281,7 +300,10 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
   display:block;font-size:14px;color:var(--coolgrey);
   line-height:1.5;margin:5px 0 0;max-width:72ch;
 }
-.snippet mark{background:#FEDD5C;color:var(--black);padding:0 2px;}
+.snippet mark{
+  background:#FEDD5C;color:var(--black);padding:0 2px;
+  font-weight:700;border-bottom:2px solid var(--black);
+}
 .body.statics{padding-bottom:18px;}
 .body.statics .urgent{border-top:none;padding-top:0;margin-top:0;}
 .body.statics .cgrid{margin-top:4px;}
@@ -379,6 +401,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 </style>
 </head>
 <body>
+<a class="skip" href="#content">Skip to content</a>
 <div class="identity"><span class="logo-slot">[Insert official Stanford logo here]</span></div>
 
 <div class="wrap">
@@ -388,29 +411,30 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
     <p class="lede">Deadlines, forms, policies, and who to contact, for teaching with Continuing Studies.</p>
   </header>
 
-  <div class="searchwrap" id="searchwrap">
+  <search class="searchwrap" id="searchwrap">
+    <label for="q" class="searchlabel">Search for an answer</label>
     <div class="searchbar">
       <svg class="mag" viewBox="0 0 24 24" fill="none" stroke="#53565A" stroke-width="2.2" aria-hidden="true">
         <circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>
       </svg>
-      <label for="q" class="sr-only">Search for an answer</label>
-      <input id="q" type="search" autocomplete="off" placeholder="Try &quot;reimbursement&quot;, &quot;guest speaker&quot;, &quot;locked out&quot;">
+      <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Try &quot;reimbursement&quot;, &quot;guest speaker&quot;, &quot;locked out&quot;">
       <button type="button" class="clear" id="clearBtn" hidden>Clear</button>
     </div>
-    <p class="count" id="count" role="status" aria-live="polite"></p>
-  </div>
+    <p class="count" id="count"></p>
+    <p class="sr-only" id="announce" role="status" aria-live="polite"></p>
+  </search>
 
   <nav class="tiles" id="tiles" aria-label="Common situations">
     <h2>Or start from a situation</h2>
     <div class="tilegrid" id="tileGrid"></div>
   </nav>
 
-  <div class="views" role="tablist" aria-label="How to browse">
-    <button type="button" role="tab" id="tab-when" aria-selected="true" aria-controls="content">Course timeline</button>
-    <button type="button" role="tab" id="tab-topic" aria-selected="false" aria-controls="content">Browse by topic</button>
+  <div class="views" role="group" aria-label="How to browse">
+    <button type="button" id="tab-when" aria-pressed="true">Course timeline</button>
+    <button type="button" id="tab-topic" aria-pressed="false">Browse by topic</button>
   </div>
 
-  <main id="content" role="tabpanel" aria-labelledby="tab-when"></main>
+  <main id="content" tabindex="-1"></main>
 
   <div class="refband">
   <p class="refeyebrow">Reference</p>
@@ -1076,6 +1100,7 @@ const QUICK = [
 const content   = document.getElementById("content");
 const qInput    = document.getElementById("q");
 const countEl   = document.getElementById("count");
+const announceEl = document.getElementById("announce");
 const clearBtn  = document.getElementById("clearBtn");
 const tabWhen   = document.getElementById("tab-when");
 const tabTopic  = document.getElementById("tab-topic");
@@ -1178,6 +1203,12 @@ ENTRIES.forEach(e=>{
   e._hay   = e._title + " " + e._alias + " " + e._body;
 });
 stripper.innerHTML = "";
+
+/* an explicit smooth scroll overrides the CSS media query, so ask first */
+function motionOK(){
+  return (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    ? "auto" : "smooth";
+}
 
 function esc(s){
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -1343,7 +1374,7 @@ function itemHtml(e, forceOpen){
   <div class="item" data-id="${e.id}">
     <details ${forceOpen?"open":""} id="d-${e.id}">
       <summary>
-        <span class="ttl">${esc(e.t)}</span>
+        <h3 class="ttl">${esc(e.t)}</h3>
         ${badges}
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
       </summary>
@@ -1367,6 +1398,9 @@ function staticResultHtml(b, label){
   /* the section's own heading duplicates the result title; inner h3s stay */
   const head = clone.firstElementChild;
   if(head && /^H[23]$/.test(head.tagName)) head.remove();
+  /* cloning does not carry click handlers, so these anchors would only
+     jump to the top of the page */
+  clone.querySelectorAll("a[href='#']").forEach(a => a.remove());
   const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>`;
   return `
   <div class="item best">
@@ -1375,7 +1409,7 @@ function staticResultHtml(b, label){
         <span class="crumb">Contacts and numbers</span>
         <span class="line1">
           <span class="bestflag">${label}</span>
-          <span class="ttl">${b.label}</span>
+          <h3 class="ttl">${b.label}</h3>
           ${chev}
         </span>
       </summary>
@@ -1400,7 +1434,7 @@ function resultHtml(e, res, isBest, bestLabel){
           <span class="crumb">${crumb}</span>
           <span class="line1">
             <span class="bestflag">${bestLabel}</span>
-            <span class="ttl">${esc(e.t)}</span>
+            <h3 class="ttl">${esc(e.t)}</h3>
             ${badges}
             ${chev}
           </span>
@@ -1415,7 +1449,7 @@ function resultHtml(e, res, isBest, bestLabel){
     <details id="d-${e.id}">
       <summary class="ressum">
         <span class="line1">
-          <span class="ttl">${esc(e.t)}</span>
+          <h3 class="ttl">${esc(e.t)}</h3>
           ${badges}
           ${chev}
         </span>
@@ -1491,6 +1525,8 @@ function render(){
   const typed = qInput.value.trim();
   const total = matches.length + statics.length;
 
+  if(searching) announce(total, typed);
+
   if(searching){
     if(total === 0){
       countEl.textContent = `Nothing found for "${typed}". Try a single word, such as reimbursement, roster, Panopto, or honorarium.`;
@@ -1529,9 +1565,10 @@ function render(){
 
     content.innerHTML = `
     <section class="group">
-      <h2>Search results</h2>
+      <h2 id="resultsHeading" tabindex="-1">Search results</h2>
       ${sectionsWin ? staticsHtml + entriesHtml : entriesHtml + staticsHtml}
     </section>`;
+    setRefbandHidden(statics.length > 0);
     wireContent();
     return;
   }
@@ -1563,7 +1600,18 @@ function render(){
       }).join("") + `</div>`;
     }
   }
+  setRefbandHidden(false);
   wireContent();
+}
+
+/* while a section is cloned into the results, hide the original so the
+   same headings and email addresses are not on the page twice */
+function setRefbandHidden(hide){
+  const band = document.querySelector(".refband");
+  if(!band) return;
+  band.style.display = hide ? "none" : "";
+  if(hide) band.setAttribute("aria-hidden", "true");
+  else band.removeAttribute("aria-hidden");
 }
 
 /* click handlers for elements render() just created */
@@ -1573,7 +1621,7 @@ function wireContent(){
       openTopic = btn.dataset.topic;
       render();
       const h = content.querySelector("h2");
-      if(h) h.scrollIntoView({behavior:"smooth", block:"center"});
+      if(h) h.scrollIntoView({behavior:motionOK(), block:"center"});
     });
   });
   const back = document.getElementById("backTopics");
@@ -1582,7 +1630,7 @@ function wireContent(){
       openTopic = null;
       render();
       const tabs = document.querySelector(".views");
-      if(tabs) tabs.scrollIntoView({behavior:"smooth", block:"start"});
+      if(tabs) tabs.scrollIntoView({behavior:motionOK(), block:"start"});
     });
   }
 }
@@ -1590,34 +1638,40 @@ function wireContent(){
 /* open one entry by id, from a quick link or a number tile */
 function openEntry(id){
   qInput.value = "";
+  mode = "when";
+  openTopic = null;
+  MODES.forEach(m => TABS[m].setAttribute("aria-pressed", String(m === mode)));
   render();
   const d = document.getElementById("d-" + id);
   if(!d) return;
   d.open = true;
-  d.scrollIntoView({behavior:"smooth", block:"center"});
+  d.scrollIntoView({behavior:motionOK(), block:"center"});
   const s = d.querySelector("summary");
   if(s) s.focus({preventScroll:true});
 }
 
 /* ---------- search wiring ---------- */
-let t = null;
+let t = null, annT = null;
 qInput.addEventListener("input", ()=>{
   clearTimeout(t);
   t = setTimeout(render, 110);
 });
+
+/* one announcement per search, not one per character */
+function announce(n, typed){
+  clearTimeout(annT);
+  annT = setTimeout(()=>{
+    if(!announceEl) return;
+    if(typed.length < 3){ announceEl.textContent = ""; return; }
+    announceEl.textContent = n === 0
+      ? "No results"
+      : n + (n === 1 ? " result" : " results");
+  }, 900);
+}
 qInput.addEventListener("keydown", e=>{
   if(e.key === "Escape"){ qInput.value = ""; render(); }
 });
 clearBtn.addEventListener("click", ()=>{ qInput.value = ""; render(); qInput.focus(); });
-
-document.addEventListener("keydown", e=>{
-  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
-  if(e.key === "/" && !typing){
-    e.preventDefault();
-    qInput.focus();
-    qInput.select();
-  }
-});
 
 /* ---------- tabs ---------- */
 const MODES = ["when", "topic"];
@@ -1627,25 +1681,14 @@ function setMode(next, focus){
   mode = next;
   openTopic = null;
   MODES.forEach(m=>{
-    const sel = m === mode;
-    TABS[m].setAttribute("aria-selected", String(sel));
-    TABS[m].tabIndex = sel ? 0 : -1;
+    TABS[m].setAttribute("aria-pressed", String(m === mode));
   });
-  content.setAttribute("aria-labelledby", "tab-" + mode);
   render();
   if(focus) TABS[mode].focus();
 }
 MODES.forEach(m=>{
   TABS[m].addEventListener("click", ()=> setMode(m));
-  TABS[m].addEventListener("keydown", e=>{
-    if(e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    e.preventDefault();
-    const i = MODES.indexOf(mode);
-    const step = e.key === "ArrowRight" ? 1 : -1;
-    setMode(MODES[(i + step + MODES.length) % MODES.length], true);
-  });
 });
-tabTopic.tabIndex = -1;
 
 /* ---------- quick links, numbers, contacts ---------- */
 const tileGrid = document.getElementById("tileGrid");
@@ -1659,8 +1702,12 @@ QUICK.forEach(item=>{
   b.addEventListener("click", ()=>{
     qInput.value = item.q;
     render();
+    /* the tiles are hidden by the render that just ran, so focus has to
+       be handed somewhere deliberate or it falls back to the document */
+    const h = document.getElementById("resultsHeading");
+    if(h) h.focus({preventScroll:true});
     const sw = document.getElementById("searchwrap");
-    if(sw) sw.scrollIntoView({behavior:"smooth", block:"start"});
+    if(sw) sw.scrollIntoView({behavior:motionOK(), block:"start"});
   });
   tileGrid.appendChild(b);
 });
@@ -1686,7 +1733,8 @@ NUMBERS.forEach(x=>{
   a.href = "#";
   a.textContent = "Read the rule";
   a.style.display = "block";
-  a.style.marginTop = "6px";
+  a.style.marginTop = "4px";
+  a.style.padding = "5px 0";
   a.style.fontWeight = "600";
   a.style.fontSize = "13.5px";
   a.addEventListener("click", ev=>{ ev.preventDefault(); openEntry(x.go); });
