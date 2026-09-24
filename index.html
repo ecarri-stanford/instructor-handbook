@@ -184,22 +184,18 @@ h1{
   padding-bottom:26px;
 }
 .group.phase::before{
-  content:"";position:absolute;left:15px;top:38px;bottom:0;
+  content:"";position:absolute;left:15px;top:34px;bottom:0;
   width:2px;background:var(--line-control);
 }
 .group.phase:last-child::before{display:none;}
 .group.phase .step{
-  position:absolute;left:0;top:8px;
+  position:absolute;left:0;top:2px;
   width:32px;height:32px;border-radius:50%;
   background:var(--cardinal);color:var(--white);
   font-family:var(--sans);font-size:14px;font-weight:700;
   display:flex;align-items:center;justify-content:center;
 }
-.group.phase > h2{margin:6px 0 2px;}
-.group.phase .when{
-  font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--coolgrey);margin:0 0 10px;
-}
+.group.phase > h2{margin:0 0 4px;}
 
 /* ---------- topic cards ---------- */
 .topicgrid{
@@ -1577,7 +1573,6 @@ function groupHtml(g, entries, forceOpen, step){
   return `
   <section class="group${isPhase ? " phase" : ""}" aria-labelledby="h-${g.k}">
     ${isPhase ? `<span class="step" aria-hidden="true">${step}</span>` : ""}
-    ${isPhase ? `<p class="when">${g.label}</p>` : ""}
     <h2 id="h-${g.k}">${g.h}</h2>
     ${entries.map(e=>itemHtml(e, forceOpen)).join("")}
   </section>`;
