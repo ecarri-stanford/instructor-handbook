@@ -91,6 +91,7 @@ h1{
 .lede{font-size:clamp(16px,1.7vw,18.5px);color:var(--coolgrey);max-width:48ch;margin:0;}
 
 /* ---------- search ---------- */
+#stickySentinel{height:1px;margin:0;padding:0;}
 .searchwrap{
   position:sticky;top:0;z-index:20;
   background:var(--white);
@@ -440,6 +441,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
     <p class="lede">Deadlines, forms, policies, and who to contact, for teaching with Continuing Studies.</p>
   </header>
 
+  <div id="stickySentinel" aria-hidden="true"></div>
   <search class="searchwrap" id="searchwrap">
     <label for="q" class="searchlabel">Search for an answer</label>
     <div class="searchbar">
@@ -1905,11 +1907,25 @@ QUICK.forEach(item=>{
   tileGrid.appendChild(b);
 });
 
-/* the search bar tightens once it sticks to the top */
+/* The search bar tightens once it sticks to the top. Deciding that from
+   the bar's own position oscillates: pinning shrinks it, which unpins it,
+   which grows it again. Watch a zero-height sentinel above it instead,
+   whose position the bar's height cannot change. */
 const searchwrap = document.getElementById("searchwrap");
-if(searchwrap){
+const sentinel = document.getElementById("stickySentinel");
+if(searchwrap && sentinel && "IntersectionObserver" in window){
+  new IntersectionObserver(
+    entries => searchwrap.classList.toggle("pinned", !entries[0].isIntersecting),
+    {threshold:0}
+  ).observe(sentinel);
+}else if(searchwrap){
+  /* fallback with a dead zone, so it cannot flip back and forth */
+  let pinned = false;
   const onScroll = ()=>{
-    const pinned = searchwrap.getBoundingClientRect().top <= 0.5;
+    const top = searchwrap.getBoundingClientRect().top;
+    if(!pinned && top <= 0) pinned = true;
+    else if(pinned && top > 24) pinned = false;
+    else return;
     searchwrap.classList.toggle("pinned", pinned);
   };
   window.addEventListener("scroll", onScroll, {passive:true});
