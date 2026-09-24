@@ -1781,28 +1781,51 @@ function writeState(replace){
   }catch(err){ /* file:// has no history API */ }
 }
 
+/* A shared link should land you on the answer. A plain refresh should
+   not yank you down to whatever you happened to have open. */
+function isReload(){
+  try{
+    const nav = performance.getEntriesByType("navigation")[0];
+    return nav ? nav.type === "reload" : false;
+  }catch(err){ return false; }
+}
+
 function readState(){
   suppressState = true;
   const params = new URLSearchParams(location.search);
   const q = params.get("q");
+  const id = location.hash.replace(/^#/, "");
+  const known = id && ENTRIES.some(e => e.id === id);
+
   if(q){
     qInput.value = q;
     render();
-  }else{
-    const id = location.hash.replace(/^#/, "");
-    if(id && ENTRIES.some(e => e.id === id)){
-      openEntry(id);
-    }else{
-      render();
+  }else if(known && !isReload()){
+    openEntry(id, true);
+  }else if(known){
+    /* reloaded: reopen the row in place, but stay at the top */
+    render();
+    const d = document.getElementById("d-" + id);
+    if(d){
+      d.open = true;
+      const row = d.closest(".item");
+      if(row) row.classList.add("open");
     }
+    window.scrollTo(0, 0);
+  }else{
+    render();
   }
   suppressState = false;
+}
+
+if(window.history && "scrollRestoration" in history){
+  history.scrollRestoration = "manual";
 }
 
 window.addEventListener("popstate", readState);
 
 /* open one entry by id, from a quick link or a number tile */
-function openEntry(id){
+function openEntry(id, instant){
   qInput.value = "";
   mode = "when";
   openTopic = null;
@@ -1811,9 +1834,18 @@ function openEntry(id){
   const d = document.getElementById("d-" + id);
   if(!d) return;
   d.open = true;
-  d.scrollIntoView({behavior:motionOK(), block:"center"});
+  const row = d.closest(".item");
+  if(row) row.classList.add("open");
   const s = d.querySelector("summary");
   if(s) s.focus({preventScroll:true});
+  /* On first load the layout is still settling and a smooth scroll gets
+     cancelled, so jump straight there and wait a frame for the fonts. */
+  const go = () => d.scrollIntoView({behavior: instant ? "auto" : motionOK(), block:"center"});
+  if(instant){
+    requestAnimationFrame(()=> requestAnimationFrame(go));
+  }else{
+    go();
+  }
 }
 
 /* ---------- search wiring ---------- */
