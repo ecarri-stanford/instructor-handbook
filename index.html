@@ -178,7 +178,7 @@ h1{
 /* phases read as steps on a path */
 .group.phase{
   position:relative;padding-left:52px;margin:0;
-  padding-bottom:26px;
+  padding-bottom:22px;
 }
 .group.phase::before{
   content:"";position:absolute;left:15px;top:34px;bottom:0;
@@ -192,7 +192,27 @@ h1{
   font-family:var(--sans);font-size:14px;font-weight:700;
   display:flex;align-items:center;justify-content:center;
 }
-.group.phase > h2{margin:0 0 4px;}
+.phasebox > summary{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:0 0 4px;
+}
+.phasebox > summary::-webkit-details-marker{display:none;}
+.phasehead h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(22px,2.6vw,28px);line-height:1.2;margin:0;color:var(--black);
+}
+.phasehead:hover h2{color:var(--cardinal);}
+.pcount{font-size:13.5px;font-weight:600;color:var(--coolgrey);white-space:nowrap;}
+.phasehead .chev{margin-left:auto;width:16px;height:16px;}
+.phasebody{padding-top:6px;}
+.group.phase.laststep::before{display:none;}
+.group.phase.anytime{margin-top:6px;padding-top:20px;border-top:1px solid var(--line);}
+.group.phase.anytime::before{display:none;}
+.anyeyebrow{
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--coolgrey);margin:0 0 6px;
+}
 
 /* ---------- topic cards ---------- */
 .topicgrid{
@@ -248,7 +268,7 @@ summary:hover .ttl{color:var(--cardinal);}
   margin-left:auto;flex:none;width:14px;height:14px;
   color:var(--coolgrey);transition:transform .15s ease;
 }
-details[open] .chev{transform:rotate(180deg);}
+details[open] > summary .chev{transform:rotate(180deg);}
 .badge{
   font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
   color:var(--white);padding:3px 8px;white-space:nowrap;flex:none;
@@ -500,7 +520,7 @@ const PHASES = [
   {k:"p4", h:"Your first class session"},
   {k:"p5", h:"During the quarter"},
   {k:"p6", h:"Your last class and after"},
-  {k:"p7", h:"Employment and pay"}
+  {k:"p7", h:"Employment and pay", anytime:true}
 ];
 
 const TOPICS = [
@@ -1557,6 +1577,27 @@ function resultHtml(e, res, isBest, bestLabel){
   </div>`;
 }
 
+/* A timeline phase, collapsed by default to its heading and a count, so
+   the whole quarter is visible at once. Undated phases get no number. */
+function phaseHtml(g, entries, step, isLast){
+  if(!entries.length) return "";
+  const numbered = typeof step === "number";
+  const n = entries.length;
+  const cls = "group phase" + (numbered ? "" : " anytime") + (isLast ? " laststep" : "");
+  return `
+  <section class="${cls}" aria-labelledby="h-${g.k}">
+    ${numbered ? `<span class="step" aria-hidden="true">${step}</span>` : `<p class="anyeyebrow">Any time</p>`}
+    <details class="phasebox" id="ph-${g.k}">
+      <summary class="phasehead">
+        <h2 id="h-${g.k}">${g.h}</h2>
+        <span class="pcount">${n} ${n === 1 ? "entry" : "entries"}</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+      </summary>
+      <div class="phasebody">${entries.map(e => itemHtml(e, false)).join("")}</div>
+    </details>
+  </section>`;
+}
+
 function groupHtml(g, entries, forceOpen, step){
   if(!entries.length) return "";
   const isPhase = typeof step === "number";
@@ -1676,13 +1717,11 @@ function render(){
   }
 
   if(mode === "when"){
-    let n = 0;
-    content.innerHTML = PHASES.map(p => {
-      const rows = matches.filter(e => e.ph === p.k);
-      if(!rows.length) return "";
-      n++;
-      return groupHtml(p, rows, false, n);
-    }).join("");
+    const timed = PHASES.filter(p => !p.anytime && matches.some(e => e.ph === p.k));
+    const undated = PHASES.filter(p => p.anytime);
+    content.innerHTML =
+      timed.map((p, i) => phaseHtml(p, matches.filter(e => e.ph === p.k), i + 1, i === timed.length - 1)).join("") +
+      undated.map(p => phaseHtml(p, matches.filter(e => e.ph === p.k), null, false)).join("");
   }else if(mode === "topic"){
     if(openTopic){
       const t = TOPIC_BY_KEY[openTopic];
@@ -1733,7 +1772,7 @@ function wireContent(){
       if(row) row.classList.toggle("open", d.open);
       /* the first opened row adds one Back step; later ones replace it, so
          five opened rows do not take five presses of Back to leave */
-      if(d.open && !d.dataset.programmatic) writeState(!!location.hash, d);
+      if(row && d.open && !d.dataset.programmatic) writeState(!!location.hash, d);
       delete d.dataset.programmatic;
       syncCollapse();
     });
@@ -1846,6 +1885,8 @@ function openEntry(id, instant){
   render();
   const d = document.getElementById("d-" + id);
   if(!d) return;
+  const phase = d.closest("details.phasebox");
+  if(phase){ phase.dataset.programmatic = "1"; phase.open = true; }
   d.dataset.programmatic = "1";
   d.open = true;
   const row = d.closest(".item");
