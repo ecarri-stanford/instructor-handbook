@@ -98,18 +98,22 @@ h1{
   padding:clamp(14px,2vw,20px) 0 6px;
   transition:padding .15s ease;
 }
+/* The pinned state must not change this element's height. Shrinking it
+   made the document shorter, Chrome's scroll anchoring compensated by
+   moving the scroll position, that moved the trigger back into view, and
+   the bar flickered between states forever. Appearance only below. */
 .searchwrap.pinned{
-  padding:10px 0 8px;
-  border-bottom:1px solid var(--line);
-  box-shadow:0 6px 14px -12px rgba(46,45,41,.5);
+  /* a shadow rather than a border, so even 1px of height cannot change */
+  box-shadow:0 1px 0 0 var(--line), 0 6px 14px -12px rgba(46,45,41,.5);
 }
+.searchwrap{overflow-anchor:none;}
 .searchbar{position:relative;margin:0;}
 .searchlabel{
   display:block;font-size:12px;font-weight:700;letter-spacing:.1em;
   text-transform:uppercase;color:var(--coolgrey);margin:0 0 7px;
 }
-.searchwrap.pinned .searchlabel{display:none;}
-.searchwrap.pinned .searchbar input{padding-top:12px;padding-bottom:12px;font-size:16px;}
+
+
 .searchbar input{
   width:100%;font-family:var(--sans);font-size:17px;
   padding:16px 108px 16px 46px;
