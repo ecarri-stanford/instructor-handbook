@@ -262,7 +262,18 @@ details[open] .chev{transform:rotate(180deg);}
   color:var(--cardinal);white-space:nowrap;flex:none;
 }
 
-.body{padding:0 0 20px;max-width:68ch;}
+.item.open{
+  background:var(--line-soft);
+  border-top:2px solid var(--cardinal);
+  margin-bottom:6px;
+}
+.item.open + .item{border-top-color:var(--line-control);}
+.item.open > details > summary{padding-left:16px;padding-right:16px;}
+.item.open .body{padding-left:16px;padding-right:16px;}
+/* the grey callout would vanish against the open row's own tint */
+.item.open .body .how{background:var(--white);}
+
+.body{padding:0 0 22px;max-width:68ch;}
 .body p{margin:0 0 12px;}
 .body ul{margin:0 0 12px;padding-left:20px;}
 .body li{margin-bottom:6px;}
@@ -291,6 +302,10 @@ details[open] .chev{transform:rotate(180deg);}
   border:2px solid var(--cardinal);
   padding:2px 16px;margin:0 0 16px;
 }
+.item.best.open{background:none;border-top-width:2px;margin-bottom:16px;}
+.item.best.open > details > summary,
+.item.best.open .body{padding-left:0;padding-right:0;}
+.item.best .body .how{background:var(--line-soft);}
 .item.best + .item{border-top:1px solid var(--line);}
 .bestflag{
   font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
@@ -1711,7 +1726,10 @@ function setRefbandHidden(hide){
 /* click handlers for elements render() just created */
 function wireContent(){
   content.querySelectorAll("details").forEach(d=>{
+    const row = d.closest(".item");
+    if(row) row.classList.toggle("open", d.open);
     d.addEventListener("toggle", ()=>{
+      if(row) row.classList.toggle("open", d.open);
       if(d.open) writeState(false);
       syncCollapse();
     });
