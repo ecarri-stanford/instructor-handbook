@@ -1803,15 +1803,10 @@ function readState(){
   }else if(known && !isReload()){
     openEntry(id, true);
   }else if(known){
-    /* reloaded: reopen the row in place, but stay at the top */
+    /* reloaded: start clean, and drop the stale id from the address bar */
     render();
-    const d = document.getElementById("d-" + id);
-    if(d){
-      d.open = true;
-      const row = d.closest(".item");
-      if(row) row.classList.add("open");
-    }
     window.scrollTo(0, 0);
+    try{ history.replaceState({}, "", location.pathname); }catch(err){}
   }else{
     render();
   }
