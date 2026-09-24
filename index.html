@@ -175,43 +175,21 @@ h1{
   font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.6vw,28px);
   line-height:1.2;margin:0 0 4px;color:var(--black);
 }
-/* phases read as steps on a path */
-.group.phase{
-  position:relative;padding-left:52px;margin:0;
-  padding-bottom:22px;
-}
-.group.phase::before{
-  content:"";position:absolute;left:15px;top:34px;bottom:0;
-  width:2px;background:var(--line-control);
-}
-.group.phase:last-child::before{display:none;}
-.group.phase .step{
-  position:absolute;left:0;top:2px;
-  width:32px;height:32px;border-radius:50%;
-  background:var(--cardinal);color:var(--white);
-  font-family:var(--sans);font-size:14px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-}
-.phasebox > summary{
-  list-style:none;cursor:pointer;
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  padding:0 0 4px;
-}
-.phasebox > summary::-webkit-details-marker{display:none;}
-.phasehead h2{
+/* phases: a numbered heading with its entries beneath */
+.group.phase{margin:40px 0 0;padding:0;}
+.group.phase:first-child{margin-top:26px;}
+.phasehead{
+  display:flex;align-items:baseline;gap:14px;
   font-family:var(--serif);font-weight:400;
-  font-size:clamp(22px,2.6vw,28px);line-height:1.2;margin:0;color:var(--black);
+  font-size:clamp(22px,2.6vw,28px);line-height:1.2;
+  margin:0 0 10px;color:var(--black);
 }
-.phasehead:hover h2{color:var(--cardinal);}
-.pcount{font-size:13.5px;font-weight:600;color:var(--coolgrey);white-space:nowrap;}
-.phasehead .chev{margin-left:auto;width:16px;height:16px;}
-.phasebody{padding-top:6px;}
-.group.phase.laststep::before{display:none;}
-.group.phase.anytime{margin-top:6px;padding-top:20px;border-top:1px solid var(--line);}
-.group.phase.anytime::before{display:none;}
+.phasehead .step{flex:none;min-width:22px;color:var(--cardinal);}
+.phasebody{padding-left:36px;}
+.group.phase.anytime{margin-top:52px;padding-top:26px;border-top:1px solid var(--line);}
 .anyeyebrow{
   font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--coolgrey);margin:0 0 6px;
+  color:var(--coolgrey);margin:0 0 8px;
 }
 
 /* ---------- topic cards ---------- */
@@ -421,9 +399,7 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 }
 
 @media (max-width:520px){
-  .group.phase{padding-left:36px;}
-  .group.phase::before{left:10px;}
-  .group.phase .step{width:22px;height:22px;font-size:12px;top:6px;}
+  .phasebody{padding-left:0;}
   .tilegrid{grid-template-columns:repeat(auto-fit,minmax(144px,1fr));}
   .tilegrid button{min-height:78px;padding:12px 11px 13px;font-size:14px;}
   .searchbar input{padding-right:88px;font-size:16px;}
@@ -514,12 +490,12 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
    ------------------------------------------------------------------ */
 
 const PHASES = [
-  {k:"p1", h:"As soon as your course is confirmed"},
-  {k:"p2", h:"About two months out"},
+  {k:"p1", h:"When your course is confirmed"},
+  {k:"p2", h:"Two months before the quarter"},
   {k:"p3", h:"The week before your first class"},
-  {k:"p4", h:"Your first class session"},
+  {k:"p4", h:"Your first class"},
   {k:"p5", h:"During the quarter"},
-  {k:"p6", h:"Your last class and after"},
+  {k:"p6", h:"At the end of your course"},
   {k:"p7", h:"Employment and pay", anytime:true}
 ];
 
@@ -1497,11 +1473,6 @@ function itemHtml(e, forceOpen){
       </summary>
       <div class="body">
         ${e.body}
-        <p class="meta">
-          <span>Handbook ${e.pg.indexOf("-") > -1 ? "pages" : "page"} ${e.pg}</span>
-          <span>${TOPIC_BY_KEY[e.tp].h}</span>
-          <span>${PHASE_BY_KEY[e.ph].h}</span>
-        </p>
       </div>
     </details>
   </div>`;
@@ -1538,7 +1509,7 @@ function staticResultHtml(b, label){
 function resultHtml(e, res, isBest, bestLabel){
   const badges = badgeHtml(e);
   const crumb = `${TOPIC_BY_KEY[e.tp].h} &middot; ${PHASE_BY_KEY[e.ph].h}`;
-  const tail = `<p class="meta"><span>Handbook ${e.pg.indexOf("-") > -1 ? "pages" : "page"} ${e.pg}</span><span>${crumb}</span></p>`;
+  const tail = "";
   const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>`;
 
   if(isBest){
@@ -1579,24 +1550,20 @@ function resultHtml(e, res, isBest, bestLabel){
 
 /* A timeline phase, collapsed by default to its heading and a count, so
    the whole quarter is visible at once. Undated phases get no number. */
+/* A timeline phase: a numbered heading with its entries beneath, always
+   open, so every answer is visible without a click. Undated phases get
+   no number and sit apart from the path. */
 function phaseHtml(g, entries, step, isLast){
   if(!entries.length) return "";
   const numbered = typeof step === "number";
-  const n = entries.length;
-  const cls = "group phase" + (numbered ? "" : " anytime") + (isLast ? " laststep" : "");
   return `
-  <section class="${cls}" aria-labelledby="h-${g.k}">
-    ${numbered ? `<span class="step" aria-hidden="true">${step}</span>` : `<p class="anyeyebrow">Any time</p>`}
-    <details class="phasebox" id="ph-${g.k}">
-      <summary class="phasehead">
-        <h2 id="h-${g.k}">${g.h}</h2>
-        <span class="pcount">${n} ${n === 1 ? "entry" : "entries"}</span>
-        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
-      </summary>
-      <div class="phasebody">${entries.map(e => itemHtml(e, false)).join("")}</div>
-    </details>
+  <section class="group phase${numbered ? "" : " anytime"}" aria-labelledby="h-${g.k}">
+    ${numbered ? "" : `<p class="anyeyebrow">Any time</p>`}
+    <h2 class="phasehead" id="h-${g.k}">${numbered ? `<span class="step" aria-hidden="true">${step}</span>` : ""}<span>${g.h}</span></h2>
+    <div class="phasebody">${entries.map(e => itemHtml(e, false)).join("")}</div>
   </section>`;
 }
+
 
 function groupHtml(g, entries, forceOpen, step){
   if(!entries.length) return "";
@@ -1885,8 +1852,6 @@ function openEntry(id, instant){
   render();
   const d = document.getElementById("d-" + id);
   if(!d) return;
-  const phase = d.closest("details.phasebox");
-  if(phase){ phase.dataset.programmatic = "1"; phase.open = true; }
   d.dataset.programmatic = "1";
   d.open = true;
   const row = d.closest(".item");
