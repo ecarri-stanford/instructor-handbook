@@ -198,17 +198,20 @@ h1{
    scroll-anchoring loop the search bar once had. */
 .sidenav{display:none;}
 @media (min-width:1180px){
-  .wrap{max-width:1220px;}
-  header.hero, #stickySentinel, .searchwrap, .tiles{max-width:960px;margin-left:auto;margin-right:auto;}
-  .browse{
+  .wrap{
+    max-width:1260px;
     display:grid;grid-template-columns:220px minmax(0,1fr);
-    gap:0 56px;align-items:start;
+    gap:0 60px;align-items:start;
   }
   .sidenav{
-    display:block;position:sticky;top:156px;
-    max-height:calc(100vh - 176px);overflow-y:auto;
-    padding:4px 0 24px;font-size:14px;
+    display:block;position:sticky;top:0;
+    max-height:100vh;overflow-y:auto;
+    padding:clamp(34px,6vw,64px) 0 28px;font-size:14px;
   }
+  /* hang the numerals in the gutter so every line of text, headings and
+     entries alike, starts on the same left edge as the search and tiles */
+  .group.phase:not(.anytime) .phasehead{margin-left:-36px;}
+  .phasebody{padding-left:0;}
 }
 .sidenav h2{
   font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.1em;
@@ -457,6 +460,16 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
 <div class="identity"><span class="logo-slot">[Insert official Stanford logo here]</span></div>
 
 <div class="wrap">
+  <nav class="sidenav" id="sidenav" aria-labelledby="sidenav-h">
+    <h2 id="sidenav-h">On this page</h2>
+    <ol class="sn-phases" id="snPhases"></ol>
+    <ul class="sn-refs">
+      <li><a href="#numbers-h" data-target="numbers-h">Deadlines and limits</a></li>
+      <li><a href="#contacts-h" data-target="contacts-h">Contacts</a></li>
+      <li><a href="#urgent-h" data-target="urgent-h">On-campus support</a></li>
+    </ul>
+  </nav>
+  <div class="page">
   <header class="hero">
     <p class="eyebrow">Continuing Studies</p>
     <h1>What do you need?</h1>
@@ -482,17 +495,6 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
     <div class="tilegrid" id="tileGrid"></div>
   </nav>
 
-  <div class="browse">
-  <nav class="sidenav" id="sidenav" aria-labelledby="sidenav-h">
-    <h2 id="sidenav-h">On this page</h2>
-    <ol class="sn-phases" id="snPhases"></ol>
-    <ul class="sn-refs">
-      <li><a href="#numbers-h" data-target="numbers-h">Deadlines and limits</a></li>
-      <li><a href="#contacts-h" data-target="contacts-h">Contacts</a></li>
-      <li><a href="#urgent-h" data-target="urgent-h">On-campus support</a></li>
-    </ul>
-  </nav>
-  <div class="browsemain">
   <div class="views" role="group" aria-label="How to browse">
     <button type="button" id="tab-when" aria-pressed="true">Course timeline</button>
     <button type="button" id="tab-topic" aria-pressed="false">Browse by topic</button>
@@ -525,9 +527,8 @@ summary.ressum .line1{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
       </ul>
   </section>
   </div>
-  </div>
-  </div>
 
+  </div>
 </div>
 
 <script>
